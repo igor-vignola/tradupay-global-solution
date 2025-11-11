@@ -1,0 +1,91 @@
+area,seniority,location,clt_avg,pj_avg
+"Desenvolvimento de Software",Júnior,"São Paulo - SP",5500,9000
+"Desenvolvimento de Software",Júnior,"Rio de Janeiro - RJ",5000,8500
+"Desenvolvimento de Software",Júnior,"Santa Catarina - SC",4500,8000
+"Desenvolvimento de Software",Pleno,"São Paulo - SP",9500,15000
+"Desenvolvimento de Software",Pleno,"Rio de Janeiro - RJ",8500,14000
+"Desenvolvimento de Software",Pleno,"Santa Catarina - SC",8000,13500
+"Desenvolvimento de Software",Sênior,"São Paulo - SP",15000,24000
+"Desenvolvimento de Software",Sênior,"Rio de Janeiro - RJ",14000,22000
+"Desenvolvimento de Software",Sênior,"Santa Catarina - SC",13000,21000
+"Infraestrutura & DevOps",Júnior,"São Paulo - SP",5000,8500
+"Infraestrutura & DevOps",Júnior,"Rio de Janeiro - RJ",4500,7700
+"Infraestrutura & DevOps",Júnior,"Santa Catarina - SC",4200,7200
+"Infraestrutura & DevOps",Pleno,"São Paulo - SP",9000,14500
+"Infraestrutura & DevOps",Pleno,"Rio de Janeiro - RJ",8100,13000
+"Infraestrutura & DevOps",Pleno,"Santa Catarina - SC",8000,13000
+"Infraestrutura & DevOps",Sênior,"São Paulo - SP",14500,23000
+"Infraestrutura & DevOps",Sênior,"Rio de Janeiro - RJ",13000,21000
+"Infraestrutura & DevOps",Sênior,"Santa Catarina - SC",12500,20000
+"Ciência de Dados",Júnior,"São Paulo - SP",6500,10000
+"Ciência de Dados",Júnior,"Rio de Janeiro - RJ",6000,9000
+"Ciência de Dados",Júnior,"Santa Catarina - SC",5500,8500
+"Ciência de Dados",Pleno,"São Paulo - SP",11000,17000
+"Ciência de Dados",Pleno,"Rio de Janeiro - RJ",10000,16000
+"Ciência de Dados",Pleno,"Santa Catarina - SC",9500,15000
+"Ciência de Dados",Sênior,"São Paulo - SP",17000,26000
+"Ciência de Dados",Sênior,"Rio de Janeiro - RJ",15500,24000
+"Ciência de Dados",Sênior,"Santa Catarina - SC",14000,22000
+"Análise de Dados (BI)",Júnior,"São Paulo - SP",4500,7500
+"Análise de Dados (BI)",Júnior,"Rio de Janeiro - RJ",4100,6800
+"Análise de Dados (BI)",Júnior,"Santa Catarina - SC",3800,6400
+"Análise de Dados (BI)",Pleno,"São Paulo - SP",7500,12000
+"Análise de Dados (BI)",Pleno,"Rio de Janeiro - RJ",6800,11000
+"Análise de Dados (BI)",Pleno,"Santa Catarina - SC",6500,10500
+"Análise de Dados (BI)",Sênior,"São Paulo - SP",11000,17000
+"Análise de Dados (BI)",Sênior,"Rio de Janeiro - RJ",10000,15500
+"Análise de Dados (BI)",Sênior,"Santa Catarina - SC",9500,14500
+"Qualidade de Software (QA)",Júnior,"São Paulo - SP",4000,7000
+"Qualidade de Software (QA)",Júnior,"Rio de Janeiro - RJ",3600,6300
+"Qualidade de Software (QA)",Júnior,"Santa Catarina - SC",3400,6000
+"Qualidade de Software (QA)",Pleno,"São Paulo - SP",7000,11000
+"Qualidade de Software (QA)",Pleno,"Rio de Janeiro - RJ",6300,10000
+"Qualidade de Software (QA)",Pleno,"Santa Catarina - SC",6000,9500
+"Qualidade de Software (QA)",Sênior,"São Paulo - SP",10000,16000
+"Qualidade de Software (QA)",Sênior,"Rio de Janeiro - RJ",9000,14500
+"Qualidade de Software (QA)",Sênior,"Santa Catarina - SC",8500,13500
+"Design de Produto (UI/UX)",Júnior,"São Paulo - SP",5000,8000
+"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro - RJ",4500,7200
+"Design de Produto (UI/UX)",Júnior,"Santa Catarina - SC",4000,7000
+"Design de Produto (UI/UX)",Pleno,"São Paulo - SP",9000,14000
+"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro - RJ",8000,13000
+"Design de Produto (UI/UX)",Pleno,"Santa Catarina - SC",7500,12000
+"Design de Produto (UI/UX)",Sênior,"São Paulo - SP",14000,22000
+"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro - RJ",13000,20000
+"Design de Produto (UI/UX)",Sênior,"Santa Catarina - SC",12000,19000
+"Marketing Digital",Júnior,"São Paulo - SP",3500,6000
+"Marketing Digital",Júnior,"Rio de Janeiro - RJ",3200,5400
+"Marketing Digital",Júnior,"Santa Catarina - SC",3000,5000
+"Marketing Digital",Pleno,"São Paulo - SP",6500,10000
+"Marketing Digital",Pleno,"Rio de Janeiro - RJ",6000,9500
+"Marketing Digital",Pleno,"Santa Catarina - SC",5500,9000
+"Marketing Digital",Sênior,"São Paulo - SP",10000,16000
+"Marketing Digital",Sênior,"Rio de Janeiro - RJ",9000,14500
+"Marketing Digital",Sênior,"Santa Catarina - SC",8500,13500
+"Análise Financeira",Júnior,"São Paulo - SP",4000,7000
+"Análise Financeira",Júnior,"Rio de Janeiro - RJ",3600,6300
+"Análise Financeira",Júnior,"Santa Catarina - SC",3400,6000
+"Análise Financeira",Pleno,"São Paulo - SP",7000,11000
+"Análise Financeira",Pleno,"Rio de Janeiro - RJ",6500,10500
+"Análise Financeira",Pleno,"Santa Catarina - SC",6000,10000
+"Análise Financeira",Sênior,"São Paulo - SP",11000,17000
+"Análise Financeira",Sênior,"Rio de Janeiro - RJ",10000,15500
+"Análise Financeira",Sênior,"Santa Catarina - SC",9500,14500
+"Recursos Humanos (Tech Recruiter)",Júnior,"São Paulo - SP",4500,7000
+"Recursos Humanos (Tech Recruiter)",Júnior,"Rio de Janeiro - RJ",4000,6300
+"Recursos Humanos (Tech Recruiter)",Júnior,"Santa Catarina - SC",3800,6000
+"Recursos Humanos (Tech Recruiter)",Pleno,"São Paulo - SP",7500,11500
+"Recursos Humanos (Tech Recruiter)",Pleno,"Rio de Janeiro - RJ",6800,10500
+"Recursos Humanos (Tech Recruiter)",Pleno,"Santa Catarina - SC",6500,10000
+"Recursos Humanos (Tech Recruiter)",Sênior,"São Paulo - SP",11000,17000
+"Recursos Humanos (Tech Recruiter)",Sênior,"Rio de Janeiro - RJ",10000,15500
+"Recursos Humanos (Tech Recruiter)",Sênior,"Santa Catarina - SC",9500,14500
+"Product Owner (PO)",Júnior,"São Paulo - SP",7000,11000
+"Product Owner (PO)",Júnior,"Rio de Janeiro - RJ",6300,10000
+"Product Owner (PO)",Júnior,"Santa Catarina - SC",6000,9500
+"Product Owner (PO)",Pleno,"São Paulo - SP",11000,17000
+"Product Owner (PO)",Pleno,"Rio de Janeiro - RJ",10000,15500
+"Product Owner (PO)",Pleno,"Santa Catarina - SC",9500,15000
+"Product Owner (PO)",Sênior,"São Paulo - SP",16000,25000
+"Product Owner (PO)",Sênior,"Rio de Janeiro - RJ",14500,23000
+"Product Owner (PO)",Sênior,"Santa Catarina - SC",13500,21000

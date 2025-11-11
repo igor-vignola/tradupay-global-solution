@@ -1,0 +1,33 @@
+<div class="space-y-4 text-sm">
+    <div>
+        <div class="flex justify-between items-center mb-1">
+            <span class="font-semibold text-gray-300">
+                {% if work_mode == 'clt' %}Seu Salário Atual{% else %}Sua Proposta{% endif %}
+            </span>
+            <span class="font-bold text-teal-400">{{ result.benchmark.proposal_val_f }}</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+            <div class="bg-teal-500 h-4 rounded-full" style="width: {{ result.benchmark.proposal_width }}%; transition: width 0.5s ease-out;"></div>
+        </div>
+    </div>
+
+    <div>
+         <div class="flex justify-between items-center mb-1">
+            <span class="font-semibold text-gray-300">Média de Mercado</span>
+            <span class="font-bold text-purple-400">{{ result.benchmark.market_val_f }}</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+            <div class="bg-purple-500 h-4 rounded-full" style="width: {{ result.benchmark.market_width }}%; transition: width 0.5s ease-out;"></div>
+        </div>
+    </div>
+</div>
+
+{% if result.benchmark.is_above %}
+    <div class="mt-4 text-center p-3 rounded-md text-sm bg-green-500/20 text-green-300">
+        Seu salário está <strong class="font-bold">{{ result.benchmark.percentageDiff }}% acima</strong> da média de mercado.
+    </div>
+{% else %}
+    <div class="mt-4 text-center p-3 rounded-md text-sm bg-red-500/20 text-red-300">
+        Seu salário está <strong class="font-bold">{{ result.benchmark.percentageDiff|cut:"-" }}% abaixo</strong> da média de mercado.
+    </div>
+{% endif %}

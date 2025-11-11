@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraduPay</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: 'fade-in' 0.5s ease-out forwards; }
+        input[type=number] { appearance: textfield; -moz-appearance: textfield; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none; margin: 0; 
+        }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 250px; background-color: #1f2937;
+            color: #fff; text-align: left; font-size: 0.75rem; border-radius: 6px;
+            padding: 8px; position: absolute; z-index: 10; bottom: 125%;
+            left: 50%; margin-left: -125px; opacity: 0;
+            transition: opacity 0.3s; border: 1px solid #374151;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-900 text-gray-200 flex flex-col font-sans">
+    
+    <header class="bg-gray-800/50 backdrop-blur-sm py-4 border-b border-gray-700 shadow-lg sticky top-0 z-10">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-3 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400"><path d="M16 16.5a2.5 2.5 0 0 0-5 0"></path><path d="M12 14v7"></path><path d="M4 16.5a2.5 2.5 0 0 0 5 0"></path><path d="M12 2v7"></path><path d="M7 7l-5 5"></path><path d_m="m17 7 5 5"></path><path d="M2 12h20"></path></svg>
+                <h1 class="text-4xl font-bold text-white tracking-tight">Tradu<span class="text-teal-400">Pay</span></h1>
+            </div>
+            <p class="text-md text-gray-400">Compare propostas CLT vs. PJ de forma justa e transparente.</p>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+        <div class="w-full max-w-4xl">
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700 mb-8 animate-fade-in" id="benchmark-form">
+                    <h2 class="text-xl font-semibold text-center text-white mb-1">Primeiro, seu Contexto Profissional</h2>
+                    <p class="text-sm text-center text-gray-400 mb-6">Isso nos ajuda a comparar sua proposta com a média do mercado.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="area" class="block text-sm font-medium text-gray-300 mb-1">Área de Atuação</label>
+                            <select id="area" name="area" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-2 px-3 text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                <option value="">Selecione...</option>
+                                {% for area in areas_list %}
+                                    <option value="{{ area }}" {% if area == selected_area %}selected{% endif %}>{{ area }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                         <div>
+                            <label for="seniority" class="block text-sm font-medium text-gray-300 mb-1">Nível de Senioridade</label>
+                            <select id="seniority" name="seniority" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-2 px-3 text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                <option value="">Selecione...</option>
+                                {% for level in seniorities_list %}
+                                     <option value="{{ level }}" {% if level == selected_seniority %}selected{% endif %}>{{ level }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                         <div>
+                            <label for="location" class="block text-sm font-medium text-gray-300 mb-1">Localização</label>
+                            <select id="location" name="location" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-2 px-3 text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                <option value="">Selecione...</option>
+                                {% for loc in locations_list %}
+                                     <option value="{{ loc }}" {% if loc == selected_location %}selected{% endif %}>{{ loc }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="values-form" class="transition-opacity duration-500">
+                    <div class="flex flex-col items-center mb-8">
+                        <label class="text-gray-400 mb-2 text-sm">Qual a sua situação?</label>
+                        <div class="bg-gray-800 p-1 rounded-lg flex space-x-1 border border-gray-700">
+                            <input type="hidden" name="work_mode" id="work_mode_input" value="{{ work_mode|default:'clt' }}">
+                            <button type="button" id="btn-clt" onclick="setWorkMode('clt')" class="px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                Sou CLT, recebi proposta PJ
+                            </button>
+                            <button type="button" id="btn-pj" onclick="setWorkMode('pj')" class="px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                Sou PJ, recebi proposta CLT
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div id="card-clt" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col justify-between">
+                            <div>
+                                <label for="clt-salary" class="block mb-2"><h2 class="text-2xl font-semibold text-white">Proposta CLT</h2><p class="text-gray-400 text-sm mt-1">Salário bruto mensal, sem descontos.</p></label>
+                                <div class="relative mt-4"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="clt-salary" name="clt_bruto" type="number" step="0.01" value="{{ clt_bruto|default_if_none:'' }}" placeholder="Ex: 5000" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Proposta CLT"></div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                <label for="extra-benefits" class="block mb-2 text-sm text-gray-400">Benefícios Extras (VA, VT, etc.)<span class="text-gray-500 ml-1">(Opcional)</span></label>
+                                <div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="extra-benefits" name="beneficios_extras" type="number" step="0.01" value="{{ beneficios_extras|default_if_none:'' }}" placeholder="Ex: 800" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Benefícios Extras"></div>
+                            </div>
+                        </div>
+                        <div id="card-pj" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col justify-between">
+                            <div>
+                                <label for="pj-revenue" class="block mb-2"><h2 class="text-2xl font-semibold text-white">Proposta PJ</h2><p class="text-gray-400 text-sm mt-1">Faturamento bruto mensal da sua empresa.</p></label>
+                                <div class="relative mt-4"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="pj-revenue" name="pj_bruto" type="number" step="0.01" value="{{ pj_bruto|default_if_none:'' }}" placeholder="Ex: 8000" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Proposta PJ"></div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                <label for="pj-costs" class="block mb-2 text-sm text-gray-400">Custos Fixos Mensais (Contador, Saúde, etc.)<span class="text-gray-500 ml-1">(Opcional)</span></label>
+                                <div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="pj-costs" name="pj_costs" type="number" step="0.01" value="{{ pj_costs|default_if_none:'' }}" placeholder="Ex: 500" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Custos Fixos Mensais"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-8">
+                    <button type="submit" id="analyze-button" class="bg-teal-500 hover:bg-teal-400 text-gray-900 font-bold py-3 px-12 rounded-lg text-lg transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg shadow-teal-500/20 disabled:shadow-none disabled:scale-100">
+                        Analisar Comparativo
+                    </button>
+                </div>
+                
+                {% if error %}
+                    <p class="text-center text-red-400 -mt-4 mb-4">{{ error }}</p>
+                {% endif %}
+            </form>
+            
+            <div id="results-section">
+                
+                {% if result %}
+                <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-lg animate-fade-in mt-8">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-center text-teal-400 mb-4">Veredito do Especialista</h2>
+                        <p class="text-center text-gray-300 text-lg leading-relaxed whitespace-pre-line">{{ result.analysis }}</p>
+                    </div>
+                    
+                    {% if result.benchmark %}
+                        <div class="border-t border-gray-700 p-6">
+                             <div class="max-w-xl mx-auto">
+                                <div class="bg-gray-900/70 p-6 rounded-lg border border-gray-700/50">
+                                    <h3 class="text-lg font-bold text-center text-white mb-4">Benchmark Salarial CLT</h3>
+                                    
+                                    {% include "benchmark_chart.html" %}
+                                    
+                                </div>
+                             </div>
+                        </div>
+                    {% endif %}
+                    <div class="border-t border-gray-700 p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-800 p-4 rounded-lg border border-blue-500/50 flex-1 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-medium text-gray-400">Valor Equivalente CLT</h3>
+                                <div class="tooltip-container">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <span class="tooltip-text">Salário bruto + valor mensal de direitos (13º, Férias, FGTS) + benefícios (VA/VT).</span>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-white mt-1">{{ result.clt_equivalent_formatted }}</p>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg border border-yellow-500/50 flex-1 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-medium text-gray-400">Líquido Real PJ</h3>
+                                <div class="tooltip-container">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <span class="tooltip-text">Faturamento bruto - custos - impostos - provisão de 13º e Férias. Este é o valor para a comparação justa.</span>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-white mt-1">{{ result.pj_real_formatted }}</p>
+                        </div>
+
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-600 flex-1 flex flex-col justify-center items-center">
+                            <h3 class="text-sm font-medium text-gray-400 text-center">Diferença Mensal Justa</h3>
+                            {% if result.diferenca > 0 %}
+                                <p class="text-3xl font-bold mt-1 text-center text-green-400">+ {{ result.diferenca_formatted }}</p>
+                            {% else %}
+                                <p class="text-3xl font-bold mt-1 text-center text-red-400">- {{ result.diferenca_formatted }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-700 p-6">
+                        <div class="bg-gray-900/70 p-4 rounded-lg text-center">
+                            <h4 class="font-semibold text-teal-400">Lembrete de Investimento (FGTS)</h4>
+                            <p class="text-gray-300 mt-1 text-sm">
+                                No regime CLT, sua empresa depositaria <strong class="text-white">{{ result.fgts_formatted }}</strong> por mês no seu FGTS. Como PJ, considere investir esse valor para seu futuro.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-700 p-6">
+                        <h3 class="text-lg font-bold text-center text-white mb-4">Análise Qualitativa: Além dos Números</h3>
+                        <div class="overflow-x-auto rounded-lg border border-gray-700">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-900">
+                                <tr>
+                                    <th class="py-3 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider">Característica</th>
+                                    <th class="py-3 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider text-center">CLT</th>
+                                    <th class="py-3 px-4 text-xs font-medium text-gray-400 uppercase tracking-wider text-center">PJ</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-gray-800">
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Flexibilidade de Horário e Local</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Estabilidade e Previsibilidade</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Autonomia e Tomada de Decisão</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Benefícios Garantidos por Lei</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Potencial de Ganhos Ilimitado</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Carga Administrativa e Burocracia</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/40">
+                                        <td class="py-3 px-4 text-sm text-gray-300">Plano de Carreira Estruturado</td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-green-400 mx-auto"><path d="M20 6 9 17l-5-5"></path></svg></td>
+                                        <td class="py-3 px-4 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-red-400 mx-auto"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900/50 p-3 text-center text-xs text-gray-500 rounded-b-xl">
+                        *Cálculos são aproximações. A média de mercado é uma estimativa. Consulte um contador.
+                    </div>
+                </div>
+                
+                {% else %}
+                <div class="text-center p-8 bg-gray-800/50 rounded-lg border border-dashed border-gray-600 mt-8">
+                    <h3 class="text-lg font-medium text-white">Aguardando sua análise</h3>
+                    <p class="text-gray-400 mt-2">Preencha seu contexto profissional e os valores para ver a mágica acontecer.</p>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900/50 border-t border-gray-800 py-6 mt-12">
+        <div class="container mx-auto px-4 text-center text-gray-500"><p class="text-sm">Feito com ❤️ para um futuro com trabalho mais justo.</p><div class="mt-2 text-xs"><p>Este projeto apoia os Objetivos de Desenvolvimento Sustentável da ONU:</p><p><span class="font-semibold text-gray-400">ODS 8:</span> Trabalho Decente e Crescimento Econômico<span class="mx-2">|</span><span class="font-semibold text-gray-400">ODS 10:</span> Redução das Desigualdades</p></div></div>
+    </footer>
+
+    <script>
+        const btnClt = document.getElementById('btn-clt');
+        const btnPj = document.getElementById('btn-pj');
+        const inputMode = document.getElementById('work_mode_input');
+        const cardClt = document.getElementById('card-clt').parentElement;
+        const cardPj = document.getElementById('card-pj').parentElement;
+        
+        // Lógica do Toggle (igual)
+        function setWorkMode(mode) {
+            inputMode.value = mode;
+            if (mode === 'clt') {
+                btnClt.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 bg-teal-500 text-gray-900 shadow-md';
+                btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
+                cardClt.style.order = 1;
+                cardPj.style.order = 2;
+            } else {
+                btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 bg-teal-500 text-gray-900 shadow-md';
+                btnClt.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
+                cardPj.style.order = 1;
+                cardClt.style.order = 2;
+            }
+        }
+        
+        // NOVO: Lógica para travar o formulário de baixo
+        const areaSelect = document.getElementById('area');
+        const senioritySelect = document.getElementById('seniority');
+        const locationSelect = document.getElementById('location');
+        const valuesForm = document.getElementById('values-form');
+        const analyzeButton = document.getElementById('analyze-button');
+
+        function checkContext() {
+            const isContextComplete = areaSelect.value && senioritySelect.value && locationSelect.value;
+            if (isContextComplete) {
+                valuesForm.style.opacity = 1;
+                valuesForm.style.pointerEvents = 'auto';
+                analyzeButton.disabled = false;
+            } else {
+                valuesForm.style.opacity = 0.4;
+                valuesForm.style.pointerEvents = 'none';
+                analyzeButton.disabled = true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Seta o modo de trabalho (CLT/PJ)
+            const currentMode = inputMode.value || 'clt';
+            setWorkMode(currentMode);
+            
+            // Seta o estado inicial do formulário de valores (travado/destravado)
+            checkContext();
+
+            // Adiciona listeners para destravar
+            areaSelect.addEventListener('change', checkContext);
+            senioritySelect.addEventListener('change', checkContext);
+            locationSelect.addEventListener('change', checkContext);
+            
+            // Lógica do botão de loading
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (e) => {
+                // Validação final antes do submit
+                if (!areaSelect.value || !senioritySelect.value || !locationSelect.value) {
+                    e.preventDefault(); // Para o envio
+                    alert('Por favor, preencha seu contexto profissional primeiro.');
+                    return;
+                }
+                if (document.getElementById('clt-salary').value && document.getElementById('pj-revenue').value) {
+                    analyzeButton.disabled = true;
+                    analyzeButton.innerText = 'Analisando...';
+                } else {
+                     e.preventDefault(); // Para o envio
+                     alert('Por favor, preencha os valores de CLT e PJ.');
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>
