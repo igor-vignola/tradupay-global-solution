@@ -24,7 +24,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: 'fade-in' 0.5s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; } /* Corrigido */
         input[type=number] { appearance: textfield; -moz-appearance: textfield; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
@@ -109,9 +109,15 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        
                         <div id="card-clt" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col justify-between">
                             <div>
-                                <label for="clt-salary" class="block mb-2"><h2 class="text-2xl font-semibold text-white">Proposta CLT</h2><p class="text-gray-400 text-sm mt-1">Salário bruto mensal, sem descontos.</p></label>
+                                <label for="clt-salary" class="block mb-2">
+                                    <h2 class="text-2xl font-semibold text-white">
+                                        {% if work_mode == 'clt' %}CLT Atual{% else %}Proposta CLT{% endif %}
+                                    </h2>
+                                    <p class="text-gray-400 text-sm mt-1">Salário bruto mensal, sem descontos.</p>
+                                </label>
                                 <div class="relative mt-4"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="clt-salary" name="clt_bruto" type="number" step="0.01" value="{{ clt_bruto|default_if_none:'' }}" placeholder="Ex: 5000" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Proposta CLT"></div>
                             </div>
                             <div class="mt-4 pt-4 border-t border-gray-700/50">
@@ -119,9 +125,15 @@
                                 <div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="extra-benefits" name="beneficios_extras" type="number" step="0.01" value="{{ beneficios_extras|default_if_none:'' }}" placeholder="Ex: 800" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Benefícios Extras"></div>
                             </div>
                         </div>
+                        
                         <div id="card-pj" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col justify-between">
                             <div>
-                                <label for="pj-revenue" class="block mb-2"><h2 class="text-2xl font-semibold text-white">Proposta PJ</h2><p class="text-gray-400 text-sm mt-1">Faturamento bruto mensal da sua empresa.</p></label>
+                                <label for="pj-revenue" class="block mb-2">
+                                    <h2 class="text-2xl font-semibold text-white">
+                                        {% if work_mode == 'clt' %}Proposta PJ{% else %}PJ Atual{% endif %}
+                                    </h2>
+                                    <p class="text-gray-400 text-sm mt-1">Faturamento bruto mensal da sua empresa.</p>
+                                </label>
                                 <div class="relative mt-4"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="pj-revenue" name="pj_bruto" type="number" step="0.01" value="{{ pj_bruto|default_if_none:'' }}" placeholder="Ex: 8000" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Proposta PJ"></div>
                             </div>
                             <div class="mt-4 pt-4 border-t border-gray-700/50">
@@ -156,39 +168,43 @@
                         <div class="border-t border-gray-700 p-6">
                              <div class="max-w-xl mx-auto">
                                 <div class="bg-gray-900/70 p-6 rounded-lg border border-gray-700/50">
-                                    <h3 class="text-lg font-bold text-center text-white mb-4">Benchmark Salarial CLT</h3>
-                                    
                                     {% include "benchmark_chart.html" %}
-                                    
                                 </div>
                              </div>
                         </div>
                     {% endif %}
+
                     <div class="border-t border-gray-700 p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-gray-800 p-4 rounded-lg border border-blue-500/50 flex-1 flex flex-col justify-between">
                             <div class="flex items-center justify-between">
-                                <h3 class="text-sm font-medium text-gray-400">Valor Equivalente CLT</h3>
+                                <h3 class="text-sm font-medium text-gray-400">
+                                    {% if work_mode == 'clt' %}Seu Valor Atual (CLT){% else %}Seu Valor Atual (PJ){% endif %}
+                                </h3>
                                 <div class="tooltip-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                    <span class="tooltip-text">Salário bruto + valor mensal de direitos (13º, Férias, FGTS) + benefícios (VA/VT).</span>
+                                    <span class="tooltip-text">Seu valor mensal total, incluindo benefícios ou provisões.</span>
                                 </div>
                             </div>
-                            <p class="text-2xl font-bold text-white mt-1">{{ result.clt_equivalent_formatted }}</p>
+                            <p class="text-2xl font-bold text-white mt-1">
+                                {% if work_mode == 'clt' %}{{ result.clt_equivalent_formatted }}{% else %}{{ result.pj_real_formatted }}{% endif %}
+                            </p>
                         </div>
-                        
                         <div class="bg-gray-800 p-4 rounded-lg border border-yellow-500/50 flex-1 flex flex-col justify-between">
                             <div class="flex items-center justify-between">
-                                <h3 class="text-sm font-medium text-gray-400">Líquido Real PJ</h3>
+                                <h3 class="text-sm font-medium text-gray-400">
+                                    {% if work_mode == 'clt' %}Sua Proposta (PJ){% else %}Sua Proposta (CLT){% endif %}
+                                </h3>
                                 <div class="tooltip-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                    <span class="tooltip-text">Faturamento bruto - custos - impostos - provisão de 13º e Férias. Este é o valor para a comparação justa.</span>
+                                    <span class="tooltip-text">O valor líquido da proposta, pronto para comparação justa.</span>
                                 </div>
                             </div>
-                            <p class="text-2xl font-bold text-white mt-1">{{ result.pj_real_formatted }}</p>
+                            <p class="text-2xl font-bold text-white mt-1">
+                                {% if work_mode == 'clt' %}{{ result.pj_real_formatted }}{% else %}{{ result.clt_equivalent_formatted }}{% endif %}
+                            </p>
                         </div>
-
                         <div class="bg-gray-900 p-4 rounded-lg border border-gray-600 flex-1 flex flex-col justify-center items-center">
-                            <h3 class="text-sm font-medium text-gray-400 text-center">Diferença Mensal Justa</h3>
+                            <h3 class="text-sm font-medium text-gray-400 text-center">Veredito da Proposta</h3>
                             {% if result.diferenca > 0 %}
                                 <p class="text-3xl font-bold mt-1 text-center text-green-400">+ {{ result.diferenca_formatted }}</p>
                             {% else %}
@@ -201,11 +217,14 @@
                         <div class="bg-gray-900/70 p-4 rounded-lg text-center">
                             <h4 class="font-semibold text-teal-400">Lembrete de Investimento (FGTS)</h4>
                             <p class="text-gray-300 mt-1 text-sm">
-                                No regime CLT, sua empresa depositaria <strong class="text-white">{{ result.fgts_formatted }}</strong> por mês no seu FGTS. Como PJ, considere investir esse valor para seu futuro.
+                                {% if result.clt.fgtsMonthly > 0 %}
+                                    No regime CLT, sua empresa depositaria <strong class="text-white">{{ result.fgts_formatted }}</strong> por mês no seu FGTS. Como PJ, considere investir esse valor para seu futuro.
+                                {% else %}
+                                    Lembre-se de investir para o seu futuro, criando sua própria reserva de emergência.
+                                {% endif %}
                             </p>
                         </div>
                     </div>
-
                     <div class="border-t border-gray-700 p-6">
                         <h3 class="text-lg font-bold text-center text-white mb-4">Análise Qualitativa: Além dos Números</h3>
                         <div class="overflow-x-auto rounded-lg border border-gray-700">
@@ -282,10 +301,16 @@
         const btnClt = document.getElementById('btn-clt');
         const btnPj = document.getElementById('btn-pj');
         const inputMode = document.getElementById('work_mode_input');
-        const cardClt = document.getElementById('card-clt').parentElement;
-        const cardPj = document.getElementById('card-pj').parentElement;
         
-        // Lógica do Toggle (igual)
+        const cardClt = document.getElementById('card-clt'); 
+        const cardPj = document.getElementById('card-pj');
+        
+        // *** INÍCIO DA CORREÇÃO ***
+        // 1. Selecionar os elementos <h2> dos títulos
+        const headingClt = document.querySelector('#card-clt h2');
+        const headingPj = document.querySelector('#card-pj h2');
+        // *** FIM DA CORREÇÃO ***
+
         function setWorkMode(mode) {
             inputMode.value = mode;
             if (mode === 'clt') {
@@ -293,15 +318,27 @@
                 btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
                 cardClt.style.order = 1;
                 cardPj.style.order = 2;
+                
+                // *** INÍCIO DA CORREÇÃO ***
+                // 2. Atualizar o texto para o modo CLT
+                headingClt.innerHTML = 'CLT Atual';
+                headingPj.innerHTML = 'Proposta PJ';
+                // *** FIM DA CORREÇÃO ***
+                
             } else {
                 btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 bg-teal-500 text-gray-900 shadow-md';
                 btnClt.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
                 cardPj.style.order = 1;
                 cardClt.style.order = 2;
+                
+                // *** INÍCIO DA CORREÇÃO ***
+                // 3. Atualizar o texto para o modo PJ (o que você pediu)
+                headingClt.innerHTML = 'Proposta CLT';
+                headingPj.innerHTML = 'PJ Atual';
+                // *** FIM DA CORREÇÃO ***
             }
         }
         
-        // NOVO: Lógica para travar o formulário de baixo
         const areaSelect = document.getElementById('area');
         const senioritySelect = document.getElementById('seniority');
         const locationSelect = document.getElementById('location');
@@ -322,24 +359,19 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Seta o modo de trabalho (CLT/PJ)
+            // Garante que o modo correto seja definido no carregamento
             const currentMode = inputMode.value || 'clt';
             setWorkMode(currentMode);
-            
-            // Seta o estado inicial do formulário de valores (travado/destravado)
             checkContext();
 
-            // Adiciona listeners para destravar
             areaSelect.addEventListener('change', checkContext);
             senioritySelect.addEventListener('change', checkContext);
             locationSelect.addEventListener('change', checkContext);
             
-            // Lógica do botão de loading
             const form = document.querySelector('form');
             form.addEventListener('submit', (e) => {
-                // Validação final antes do submit
                 if (!areaSelect.value || !senioritySelect.value || !locationSelect.value) {
-                    e.preventDefault(); // Para o envio
+                    e.preventDefault(); 
                     alert('Por favor, preencha seu contexto profissional primeiro.');
                     return;
                 }
@@ -347,7 +379,7 @@
                     analyzeButton.disabled = true;
                     analyzeButton.innerText = 'Analisando...';
                 } else {
-                     e.preventDefault(); // Para o envio
+                     e.preventDefault(); 
                      alert('Por favor, preencha os valores de CLT e PJ.');
                 }
             });

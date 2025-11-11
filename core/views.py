@@ -84,43 +84,80 @@ def get_market_rate_from_csv(area, seniority, location):
         return None
 
 # ===================================================================
-# "IA SIMULADA" (Sem mudanças)
+# "IA SIMULADA" (VERSÃO V4 - O ESPECIALISTA)
 # ===================================================================
+
 def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
+    """
+    Simula o prompt do geminiService.ts (v3)
+    mas com o TOM DE VOZ "ESPECIALISTA" que você pediu.
+    """
     def f(val): return format_currency(val)
 
+    # --- 1. Dados para o Veredito da Troca ---
     clt_final = clt['equivalentValue']
     pj_final = pj['netValueWithProvisioning']
-    veredicto_troca = ""
-    if work_mode == 'clt':
-        diferenca = pj_final - clt_final
-        if diferenca > 200:
-            veredicto_troca = (f"A proposta PJ, mesmo provisionando benefícios, representa um ganho mensal de {f(diferenca)}. Financeiramente, a troca é vantajosa.")
-        elif diferenca < -200:
-            veredicto_troca = (f"Alerta: A proposta PJ tem um valor líquido (com provisão) {f(abs(diferenca))} menor que seu valor CLT atual. Na prática, você estaria aceitando uma redução.")
-        else:
-            veredicto_troca = (f"A troca é financeiramente equivalente. O valor líquido provisionado do PJ é muito próximo ao seu valor CLT atual.")
-    else: 
-        diferenca = clt_final - pj_final
-        if diferenca < -200:
-            veredicto_troca = (f"Alerta: A proposta CLT tem um valor total {f(abs(diferenca))} menor que seu líquido PJ atual (com provisão). Financeiramente, não parece ser uma boa troca.")
-        elif diferenca > 200:
-            veredicto_troca = (f"A proposta CLT é vantajosa, oferecendo {f(diferenca)} a mais em valor total do que seu líquido PJ atual (com provisão).")
-        else:
-            veredicto_troca = (f"A proposta CLT é financeiramente equivalente ao seu líquido PJ (com provisão). A decisão depende de fatores não-financeiros.")
-
-    analise_mercado = ""
+    
+    # --- 2. Dados para a Análise de Mercado ---
+    frase_mercado = ""
+    percent_diff_mercado = 0
+    is_above_mercado = False
+    
     if market_rate and market_rate.get('clt') and clt['grossSalary'] > 0:
         market_value = market_rate['clt']
         salary_value = clt['grossSalary']
         diferenca_mercado = salary_value - market_value
-        percent_diff = (diferenca_mercado / market_value) * 100
-        is_above = diferenca_mercado >= 0
-        analise_mercado = (f"A média de mercado para uma vaga CLT similar é de {f(market_value)}. Seu salário CLT está {abs(percent_diff):.0f}% {'ACIMA' if is_above else 'ABAIXO'} da média.")
-    else:
-        analise_mercado = "Não foi possível obter uma média de mercado para seu contexto CLT."
+        percent_diff_mercado = (diferenca_mercado / market_value) * 100
+        is_above_mercado = diferenca_mercado >= 0
+        
+        # Constrói a frase de mercado
+        pct_abs = f"{abs(percent_diff_mercado):.0f}%"
+        posicao = "acima" if is_above_mercado else "abaixo"
+        
+        if abs(percent_diff_mercado) < 5:
+             frase_mercado = f"Seu salário CLT atual está alinhado com a média de mercado para sua função e nível."
+        elif is_above_mercado:
+             frase_mercado = f"Seu salário CLT atual, que já está {pct_abs} {posicao} da média, demonstra que você está em uma posição muito favorável e valorizada."
+        else: # Abaixo da média
+             frase_mercado = f"No entanto, seu salário CLT atual está {pct_abs} {posicao} da média de mercado, o que indica que você tem uma forte base para negociar."
 
-    return f"{veredicto_troca} {analise_mercado}"
+    # --- 3. Geração do Veredito (Juntando tudo) ---
+    
+    # Cenário: Usuário é CLT e avalia PJ
+    if work_mode == 'clt':
+        diferenca_troca = pj_final - clt_final
+        
+        if diferenca_troca > 200: # PJ Vantajoso
+            frase_troca = (f"A proposta PJ, mesmo provisionando benefícios, representa um ganho mensal de {f(diferenca_troca)}. "
+                           f"Financeiramente, a troca é vantajosa.")
+        elif diferenca_troca < -200: # PJ Desvantajoso (Exemplo da sua imagem)
+            frase_troca = (f"A proposta PJ representa uma perda financeira substancial de {f(abs(diferenca_troca))} "
+                           f"em comparação ao seu valor CLT atual, tornando a troca financeiramente desvantajosa.")
+            # Ajuste de tom (se o CLT já for bom, a proposta PJ é *ainda pior*)
+            if is_above_mercado:
+                frase_mercado = frase_mercado.replace("demonstra que você está", "demonstra que você já está")
+                frase_mercado += " Isso enfraquece a justificativa para aceitar uma proposta PJ tão inferior."
+        else: # Empate
+            frase_troca = (f"A proposta PJ é financeiramente equivalente ao seu valor CLT atual, com uma diferença de apenas {f(abs(diferenca_troca))}. "
+                           f"A decisão deve se basear em outros fatores, como flexibilidade vs. segurança.")
+
+    # Cenário: Usuário é PJ e avalia CLT
+    else: 
+        diferenca_troca = clt_final - pj_final
+        
+        if diferenca_troca > 200: # Proposta CLT Vantajosa
+            frase_troca = (f"A proposta CLT oferece um valor total {f(diferenca_troca)} maior que seu líquido PJ atual (com provisão). "
+                           f"Financeiramente, a troca é positiva.")
+        elif diferenca_troca < -200: # Proposta CLT Desvantajosa
+             frase_troca = (f"Alerta: A proposta CLT tem um valor total {f(abs(diferenca_troca))} menor que seu líquido PJ atual (com provisão). "
+                            f"Na prática, você estaria aceitando uma redução para ter a segurança da CLT.")
+        else: # Empate
+             frase_troca = (f"A proposta CLT ({f(clt_final)}) é financeiramente equivalente "
+                            f"ao seu líquido real PJ atual ({f(pj_final)}). "
+                            f"A decisão de trocar a flexibilidade pela segurança depende de você.")
+
+    # Junta as duas partes em um parágrafo coeso
+    return f"{frase_troca} {frase_mercado}"
 
 # ===================================================================
 # A VIEW PRINCIPAL (COM A LÓGICA DO GRÁFICO)
