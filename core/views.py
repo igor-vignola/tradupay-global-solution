@@ -221,6 +221,32 @@ def home(request):
                 'pj_real_formatted': format_currency(pj_result['netValueWithProvisioning']),
                 'fgts_formatted': format_currency(clt_result['fgtsMonthly']),
                 'diferenca_formatted': format_currency(abs(diferenca_final)),
+
+                # ==========================================================
+                # ============= INÍCIO DA ATUALIZAÇÃO ======================
+                # Adicionando os valores formatados para o "Breakdown"
+                
+                # --- Valores CLT Formatados ---
+                'clt_gross_f': format_currency(clt_result['grossSalary']),
+                'clt_benefits_f': format_currency(clt_result['extraBenefits']),
+                'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']),
+                'clt_vacation_f': format_currency(clt_result['vacationMonthly']),
+                'clt_vacation_bonus_f': format_currency(clt_result['vacationBonusMonthly']),
+                'clt_fgts_f': format_currency(clt_result['fgtsMonthly']),
+                'clt_total_benefits_f': format_currency(clt_result['totalBenefitsMonthly']),
+                'clt_total_f': format_currency(clt_result['equivalentValue']),
+                
+                # --- Valores PJ Formatados ---
+                'pj_revenue_f': format_currency(pj_result['grossRevenue']),
+                'pj_costs_f': format_currency(pj_result['costs']),
+                'pj_tax_f': format_currency(pj_result['taxAmount']),
+                'pj_tax_rate_f': f"{pj_result['taxRate'] * 100:.1f}%",
+                'pj_net_pre_provision_f': format_currency(pj_result['netValue']),
+                'pj_provisions_f': format_currency(pj_result['totalProvisions']),
+                'pj_total_f': format_currency(pj_result['netValueWithProvisioning']),
+
+                # ============= FIM DA ATUALIZAÇÃO =========================
+                # ==========================================================
             }
             
             # --- NOVA LÓGICA DO GRÁFICO ---
