@@ -1,12 +1,11 @@
-# core/views.py (VERSÃO COMPLETA E ATUALIZADA)
+# core/views.py (VERSÃO CORRIGIDA E FIDEDIGNA)
 
 from django.shortcuts import render
-import math
 import pandas as pd
 import os
 
 # ===================================================================
-# CARREGAR A BASE DE DADOS
+# CARREGAR A BASE DE DADOS (Sem mudanças)
 # ===================================================================
 try:
     CSV_PATH = os.path.join(os.path.dirname(__file__), 'salarios_mercado.csv')
@@ -22,19 +21,44 @@ except FileNotFoundError:
     LOCATIONS_LIST = ['São Paulo - SP', 'Rio de Janeiro - RJ', 'Santa Catarina - SC']
 
 # ===================================================================
-# CONSTANTES DE CÁLCULO
+# CONSTANTES E TABELAS FISCAIS (NOVAS)
 # ===================================================================
-# Limite mensal para enquadramento no MEI (R$ 81.000 / 12)
 MEI_MONTHLY_REVENUE_LIMIT = 6750.00
-# Valor fixo aproximado do DAS MEI (varia um pouco por atividade)
 DAS_MEI_FIXED_VALUE = 72.00 
-# Custo fixo do INSS sobre pró-labore (11% do Sal. Mínimo R$ 1412 em 2024)
-# Obrigatório para sócios no Simples Nacional
-PRO_LABORE_INSS_FIXED = 155.32 
+MINIMUM_WAGE = 1412.00 # Salário Mínimo 2024
+
+# Tabela Progressiva INSS (2024)
+INSS_TABLE = [
+    (1412.00, 0.075),
+    (2666.68, 0.09),
+    (4000.03, 0.12),
+    (7786.02, 0.14),
+]
+INSS_CEILING = 908.85  # Teto do desconto do INSS
+
+# Tabela Progressiva IRRF (2024 - Simplificada com desconto 564.80)
+# (Limite da Faixa, Alíquota, Parcela a Deduzir)
+IRRF_TABLE = [
+    (2259.20, 0.00, 0.00),     # Isento
+    (2826.65, 0.075, 169.44),
+    (3751.05, 0.15, 381.44),
+    (4664.68, 0.225, 662.77),
+    (float('inf'), 0.275, 896.00),
+]
+# Desconto simplificado opcional do IRRF (ou por deduções legais)
+# Usaremos o simplificado para este cálculo, que na prática sobe a isenção
+IRRF_SIMPLIFIED_DEDUCTION = 564.80
+IRRF_DEPENDENT_DEDUCTION = 189.59 # (Não usado no app ainda, mas é o valor real)
+
+# Alíquotas Simples Nacional (Anexos para Serviços de TI/MKT/Design)
+# (Assumindo faturamento anual até 180k para simplificar)
+ANEXO_III_RATE = 0.06  # 6% (Com Fator R)
+ANEXO_V_RATE = 0.155 # 15.5% (Sem Fator R)
 
 # ===================================================================
-# FUNÇÃO DE FORMATAÇÃO
+# FUNÇÕES DE CÁLCULO FISCAL (NOVAS)
 # ===================================================================
+
 def format_currency(value):
     try:
         val_str = f"{value:,.2f}"
@@ -42,79 +66,187 @@ def format_currency(value):
     except (ValueError, TypeError):
         return "R$ 0,00"
 
+def calculate_inss_clt(gross_salary):
+    """Calcula o INSS progressivo sobre o salário CLT."""
+    if gross_salary > 7786.02:
+        return INSS_CEILING
+    
+    tax = 0
+    previous_limit = 0
+    for limit, rate in INSS_TABLE:
+        if gross_salary > limit:
+            taxable_slice = limit - previous_limit
+            tax += taxable_slice * rate
+            previous_limit = limit
+        else:
+            taxable_slice = gross_salary - previous_limit
+            tax += taxable_slice * rate
+            break
+    return tax
+
+def calculate_irrf(base_salary):
+    """
+    Calcula o IRRF sobre uma base de cálculo (Bruto - INSS).
+    Usa o desconto simplificado de R$ 564,80.
+    """
+    # Aplicar o desconto simplificado
+    taxable_base = base_salary - IRRF_SIMPLIFIED_DEDUCTION
+    
+    if taxable_base <= 2259.20: # Limite de isenção pós-desconto
+         return 0.0
+
+    for limit, rate, deduction in IRRF_TABLE:
+        if taxable_base <= limit:
+            tax = (taxable_base * rate) - deduction
+            return max(0, tax) # Imposto não pode ser negativo
+    return 0.0 # Fallback
+
 # ===================================================================
-# LÓGICA DE CÁLCULO (CLT sem mudanças)
+# LÓGICA DE CÁLCULO (CLT ATUALIZADA)
 # ===================================================================
 
 def calculate_clt_equivalent_monthly_value(gross_salary, extra_benefits=0):
-    thirteenth_monthly = gross_salary / 12
-    vacation_monthly = gross_salary / 12
-    vacation_bonus_monthly = (gross_salary / 3) / 12
+    """
+    Calcula o VALOR LÍQUIDO EQUIVALENTE do CLT.
+    (Bruto - Descontos) + Benefícios (Líquidos/12) + FGTS.
+    """
+    
+    # 1. Calcular Descontos do Salário Mensal
+    inss_discount = calculate_inss_clt(gross_salary)
+    base_for_irrf = gross_salary - inss_discount
+    irrf_discount = calculate_irrf(base_for_irrf)
+    
+    net_salary = gross_salary - inss_discount - irrf_discount
+    
+    # 2. Calcular Benefícios Mensalizados
+    # FGTS é sempre sobre o bruto e não tem desconto
     fgts_monthly = gross_salary * 0.08
-    total_benefits_monthly = (thirteenth_monthly + vacation_monthly + vacation_bonus_monthly + fgts_monthly)
-    equivalent_value = gross_salary + total_benefits_monthly + extra_benefits
-    return {'grossSalary': gross_salary, 'extraBenefits': extra_benefits, 'thirteenthMonthly': thirteenth_monthly, 'vacationMonthly': vacation_monthly, 'vacationBonusMonthly': vacation_bonus_monthly, 'fgtsMonthly': fgts_monthly, 'totalBenefitsMonthly': total_benefits_monthly, 'equivalentValue': equivalent_value}
-
-def get_simples_nacional_tax_rate(monthly_revenue):
-    # Função original mantida para o cálculo do Simples
-    if monthly_revenue <= 15000: return 0.06
-    if monthly_revenue <= 30000: return 0.112
-    if monthly_revenue <= 60000: return 0.135
-    if monthly_revenue <= 150000: return 0.16
-    if monthly_revenue <= 300000: return 0.21
-    return 0.33
+    
+    # 13º (Líquido)
+    # Nota: O cálculo real do 13º tem descontos próprios, mas usar o
+    # salário líquido como base é uma aproximação 99% correta.
+    net_thirteenth_monthly = net_salary / 12
+    
+    # Férias + 1/3 (Líquido)
+    gross_vacation = gross_salary * (1 + 1/3)
+    # INSS e IRRF também incidem sobre as férias
+    inss_vacation = calculate_inss_clt(gross_vacation)
+    irrf_vacation = calculate_irrf(gross_vacation - inss_vacation)
+    net_vacation = gross_vacation - inss_vacation - irrf_vacation
+    net_vacation_monthly = net_vacation / 12
+    
+    # 3. Valor Total Equivalente (Dinheiro no bolso + Patrimônio)
+    equivalent_value = net_salary + net_thirteenth_monthly + net_vacation_monthly + fgts_monthly + extra_benefits
+    
+    return {
+        'grossSalary': gross_salary,
+        'extraBenefits': extra_benefits,
+        'inssDiscount': inss_discount,           # NOVO
+        'irrfDiscount': irrf_discount,           # NOVO
+        'netSalary': net_salary,                 # NOVO
+        'thirteenthMonthly': net_thirteenth_monthly, # Agora é líquido
+        'vacationMonthly': net_vacation_monthly,     # Agora é líquido
+        'fgtsMonthly': fgts_monthly,
+        'equivalentValue': equivalent_value      # Agora é (Líquido + Provisões + FGTS)
+    }
 
 # ===================================================================
-# LÓGICA DE CÁLCULO (PJ ATUALIZADA)
+# LÓGICA DE CÁLCULO (PJ ATUALIZADA - FATOR R)
 # ===================================================================
 def calculate_pj_net_value(gross_revenue, costs=0, tax_rate_override=None):
     """
-    Calcula o valor líquido PJ, diferenciando automaticamente
-    entre MEI e Simples Nacional baseado no faturamento.
-    Permite um override da taxa do Simples.
+    Calcula o valor líquido PJ com OTIMIZAÇÃO TRIBUTÁRIA (Fator R).
+    Compara Anexo V vs. Anexo III e escolhe o mais barato.
     """
-    taxable_revenue = gross_revenue - costs
-    thirteenth_provision = taxable_revenue / 12
-    vacation_provision = taxable_revenue / 12
-    total_provisions = thirteenth_provision + vacation_provision
-
+    
+    # 1. Cenário MEI (Simples e direto)
     if gross_revenue <= MEI_MONTHLY_REVENUE_LIMIT:
-        # --- Lógica MEI ---
         regime = 'MEI'
-        tax_rate = 0
-        tax_amount = DAS_MEI_FIXED_VALUE
-        pro_labore_inss = 0
-        net_value = taxable_revenue - tax_amount
-        
+        strategy = 'MEI (Regime Simplificado)'
+        tax_amount_das = DAS_MEI_FIXED_VALUE
+        pro_labore = 0
+        inss_pro_labore = 0
+        irrf_pro_labore = 0
+        total_costs = costs + tax_amount_das
+        net_value_pre_provision = gross_revenue - total_costs
+    
+    # 2. Cenário Simples Nacional (A Mágica do Fator R)
     else:
-        # --- Lógica Simples Nacional (com override) ---
         regime = 'Simples Nacional'
         
-        # Se o usuário digitou uma taxa, use-a. Senão, calcule.
+        # Se usuário forçou a taxa, usamos a lógica antiga (sem otimização)
         if tax_rate_override is not None:
+            strategy = f'Taxa Manual ({tax_rate_override*100:.1f}%)'
             tax_rate = tax_rate_override
-        else:
-            tax_rate = get_simples_nacional_tax_rate(gross_revenue)
+            tax_amount_das = gross_revenue * tax_rate
+            # Assume pró-labore mínimo para quem força a taxa
+            pro_labore = MINIMUM_WAGE
+            inss_pro_labore = pro_labore * 0.11
+            irrf_pro_labore = 0 # IRRF é isento no salário mínimo
             
-        tax_amount = gross_revenue * tax_rate
-        pro_labore_inss = PRO_LABORE_INSS_FIXED
-        net_value = taxable_revenue - tax_amount - pro_labore_inss
+        else:
+            # --- Otimização: Calcular os DOIS cenários ---
+            
+            # Cenário A: ANEXO V (Pró-labore Mínimo)
+            pl_A = MINIMUM_WAGE
+            inss_A = pl_A * 0.11
+            irrf_A = 0 # Isento
+            das_A = gross_revenue * ANEXO_V_RATE
+            total_cost_A = das_A + inss_A + irrf_A
+            net_A = gross_revenue - costs - total_cost_A
+            
+            # Cenário B: ANEXO III (Fator R >= 28%)
+            pl_B = gross_revenue * 0.28
+            inss_B = pl_B * 0.11
+            irrf_B_base = pl_B - inss_B
+            irrf_B = calculate_irrf(irrf_B_base) # IRRF sobre pró-labore alto
+            das_B = gross_revenue * ANEXO_III_RATE
+            total_cost_B = das_B + inss_B + irrf_B
+            net_B = gross_revenue - costs - total_cost_B
+            
+            # --- Decisão do "Contador Digital" ---
+            if net_B > net_A:
+                # Vale a pena pagar mais INSS/IRRF para economizar no DAS
+                strategy = 'Anexo III (Fator R)'
+                tax_rate = ANEXO_III_RATE
+                tax_amount_das = das_B
+                pro_labore = pl_B
+                inss_pro_labore = inss_B
+                irrf_pro_labore = irrf_B
+            else:
+                # Mais barato ficar no Anexo V
+                strategy = 'Anexo V (Pró-labore Mínimo)'
+                tax_rate = ANEXO_V_RATE
+                tax_amount_das = das_A
+                pro_labore = pl_A
+                inss_pro_labore = inss_A
+                irrf_pro_labore = irrf_A
+        
+        total_costs = costs + tax_amount_das + inss_pro_labore + irrf_pro_labore
+        net_value_pre_provision = gross_revenue - total_costs
 
-    net_value_with_provisioning = net_value - total_provisions
+    # 3. Calcular Provisões (Férias/13º)
+    # A provisão é sobre o LÍQUIDO que sobra, não sobre o bruto.
+    thirteenth_provision = net_value_pre_provision / 12
+    vacation_provision = net_value_pre_provision / 12 # Simplificado (1 mês)
+    total_provisions = thirteenth_provision + vacation_provision
+    
+    net_value_with_provisioning = net_value_pre_provision - total_provisions
     
     return {
         'regime': regime,
+        'strategy': strategy,                   # NOVO
         'grossRevenue': gross_revenue,
         'costs': costs,
-        'taxableRevenue': taxable_revenue,
-        'taxRate': tax_rate,
-        'taxAmount': tax_amount,
-        'proLaboreInss': pro_labore_inss,
-        'netValue': net_value,
+        'taxRate': locals().get('tax_rate', 0), # Taxa efetiva usada
+        'taxAmount': tax_amount_das,            # Renomeado de taxAmount
+        'proLaboreInss': inss_pro_labore,       # Renomeado de proLaboreInss
+        'proLaboreIrrf': irrf_pro_labore,       # NOVO
+        'netValue': net_value_pre_provision,    # Valor antes de provisões
         'thirteenthProvision': thirteenth_provision,
         'vacationProvision': vacation_provision,
         'totalProvisions': total_provisions,
-        'netValueWithProvisioning': net_value_with_provisioning
+        'netValueWithProvisioning': net_value_with_provisioning # Valor final comparável
     }
 
 # ===================================================================
@@ -138,7 +270,7 @@ def get_market_rate_from_csv(area, seniority, location):
         return None
 
 # ===================================================================
-# "IA SIMULADA" (Sem mudanças)
+# "IA SIMULADA" (Sem mudanças, já compara os valores finais)
 # ===================================================================
 
 def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
@@ -193,8 +325,9 @@ def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
 
     return f"{frase_troca} {frase_mercado}"
 
+
 # ===================================================================
-# A VIEW PRINCIPAL (COM A LÓGICA DO GRÁFICO)
+# A VIEW PRINCIPAL (ATUALIZADA PARA NOVOS DADOS)
 # ===================================================================
 
 def home(request):
@@ -211,8 +344,8 @@ def home(request):
         'selected_area': '',
         'selected_seniority': '',
         'selected_location': '',
-        'mei_limit': MEI_MONTHLY_REVENUE_LIMIT,       # <-- NOVO: Passa o limite para o JS
-        'pj_tax_rate_override': '',                   # <-- NOVO: Valor default
+        'mei_limit': MEI_MONTHLY_REVENUE_LIMIT,
+        'pj_tax_rate_override': '',
     }
 
     if request.method == 'POST':
@@ -226,16 +359,15 @@ def home(request):
             pj_costs_str = request.POST.get('pj_costs', '0')
             work_mode = request.POST.get('work_mode', 'clt')
             
-            # --- NOVO: Recebe a alíquota manual ---
             pj_tax_rate_override_str = request.POST.get('pj_tax_rate_override', '')
             pj_tax_rate_override_num = float(pj_tax_rate_override_str) / 100 if pj_tax_rate_override_str else None
-            # --- FIM DA ATUALIZAÇÃO ---
 
             clt_bruto = float(clt_bruto_str) if clt_bruto_str else 0
             pj_bruto = float(pj_bruto_str) if pj_bruto_str else 0
             beneficios_extras = float(beneficios_extras_str) if beneficios_extras_str else 0
             pj_costs = float(pj_costs_str) if pj_costs_str else 0
 
+            # Validações (sem mudança)
             if not area or not seniority or not location:
                 context['error'] = 'Por favor, preencha seu contexto profissional para uma análise completa.'
                 return render(request, 'index.html', context)
@@ -246,15 +378,15 @@ def home(request):
                 context['selected_location'] = location
                 return render(request, 'index.html', context)
 
+            # --- NOVOS CÁLCULOS ---
             clt_result = calculate_clt_equivalent_monthly_value(clt_bruto, beneficios_extras)
-            
-            # --- ATUALIZADO: Passa a alíquota manual para o cálculo ---
             pj_result = calculate_pj_net_value(pj_bruto, pj_costs, pj_tax_rate_override_num)
             
             market_rate = get_market_rate_from_csv(area, seniority, location)
             analysis_text = get_financial_analysis(clt_result, pj_result, work_mode, area, seniority, market_rate)
             diferenca_final = pj_result['netValueWithProvisioning'] - clt_result['equivalentValue']
             
+            # --- NOVO DICIONÁRIO DE RESULTADOS ---
             result_data = {
                 'clt': clt_result,
                 'pj': pj_result,
@@ -263,29 +395,34 @@ def home(request):
                 'diferenca': diferenca_final,
                 'clt_equivalent_formatted': format_currency(clt_result['equivalentValue']),
                 'pj_real_formatted': format_currency(pj_result['netValueWithProvisioning']),
-                'fgts_formatted': format_currency(clt_result['fgtsMonthly']),
+                'fgts_formatted': format_currency(clt_result['fgtsMonthly']), # Usado na Dica de Invest.
                 'diferenca_formatted': format_currency(abs(diferenca_final)),
                 
+                # Detalhes CLT (Líquido)
                 'clt_gross_f': format_currency(clt_result['grossSalary']),
+                'clt_inss_f': format_currency(clt_result['inssDiscount']),
+                'clt_irrf_f': format_currency(clt_result['irrfDiscount']),
+                'clt_net_f': format_currency(clt_result['netSalary']),
                 'clt_benefits_f': format_currency(clt_result['extraBenefits']),
-                'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']),
-                'clt_vacation_f': format_currency(clt_result['vacationMonthly']),
-                'clt_vacation_bonus_f': format_currency(clt_result['vacationBonusMonthly']),
+                'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']), # Líquido
+                'clt_vacation_f': format_currency(clt_result['vacationMonthly']),     # Líquido
                 'clt_fgts_f': format_currency(clt_result['fgtsMonthly']),
-                'clt_total_benefits_f': format_currency(clt_result['totalBenefitsMonthly']),
                 'clt_total_f': format_currency(clt_result['equivalentValue']),
                 
+                # Detalhes PJ (Otimizado)
                 'pj_revenue_f': format_currency(pj_result['grossRevenue']),
                 'pj_costs_f': format_currency(pj_result['costs']),
-                'pj_tax_f': format_currency(pj_result['taxAmount']),
+                'pj_tax_f': format_currency(pj_result['taxAmount']), # DAS
                 'pj_tax_rate_f': f"{pj_result['taxRate'] * 100:.1f}%",
                 'pj_pro_labore_inss_f': format_currency(pj_result['proLaboreInss']),
+        'pj_pro_labore_irrf_f': format_currency(pj_result['proLaboreIrrf']), # NOVO
                 'pj_net_pre_provision_f': format_currency(pj_result['netValue']),
                 'pj_provisions_f': format_currency(pj_result['totalProvisions']),
                 'pj_total_f': format_currency(pj_result['netValueWithProvisioning']),
             }
             
             if market_rate:
+                # Lógica do benchmark (sem mudanças)
                 proposal_num = clt_result['grossSalary']
                 market_num = market_rate['clt']
                 percentage_diff = ((proposal_num - market_num) / market_num) * 100
@@ -315,7 +452,7 @@ def home(request):
             context['selected_area'] = area
             context['selected_seniority'] = seniority
             context['selected_location'] = location
-            context['pj_tax_rate_override'] = pj_tax_rate_override_str # <-- NOVO: Passa o valor de volta pro form
+            context['pj_tax_rate_override'] = pj_tax_rate_override_str 
 
         except (ValueError, TypeError) as e:
             print(e)

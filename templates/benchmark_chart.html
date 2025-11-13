@@ -1,33 +1,48 @@
-<div class="space-y-4 text-sm">
+<div class="space-y-5 text-sm">
+    
     <div>
-        <div class="flex justify-between items-center mb-1">
-            <span class="font-semibold text-gray-300">
-                {% if work_mode == 'clt' %}Seu Salário Atual{% else %}Sua Proposta{% endif %}
+        <div class="flex justify-between items-baseline mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider text-gray-400">
+                {% if work_mode == 'clt' %}Seu Salário Bruto{% else %}Sua Proposta{% endif %}
             </span>
-            <span class="font-bold text-teal-400">{{ result.benchmark.proposal_val_f }}</span>
+            <span class="text-lg font-bold text-teal-300">{{ result.benchmark.proposal_val_f }}</span>
         </div>
-        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
-            <div class="bg-teal-500 h-4 rounded-full" style="width: {{ result.benchmark.proposal_width }}%; transition: width 0.5s ease-out;"></div>
+        <div class="w-full bg-gray-900/70 rounded-full h-3 overflow-hidden shadow-inner ring-1 ring-gray-700/50">
+            <div class="bg-gradient-to-r from-teal-500 to-cyan-400 h-3 rounded-full shadow-lg shadow-teal-500/20" 
+                 style="width: {{ result.benchmark.proposal_width }}%; transition: width 0.8s ease-in-out;">
+            </div>
         </div>
     </div>
 
     <div>
-         <div class="flex justify-between items-center mb-1">
-            <span class="font-semibold text-gray-300">Média de Mercado</span>
-            <span class="font-bold text-purple-400">{{ result.benchmark.market_val_f }}</span>
+         <div class="flex justify-between items-baseline mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider text-gray-400">Média de Mercado</span>
+            <span class="text-lg font-bold text-purple-300">{{ result.benchmark.market_val_f }}</span>
         </div>
-        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
-            <div class="bg-purple-500 h-4 rounded-full" style="width: {{ result.benchmark.market_width }}%; transition: width 0.5s ease-out;"></div>
+        <div class="w-full bg-gray-900/70 rounded-full h-3 overflow-hidden shadow-inner ring-1 ring-gray-700/50">
+            <div class="bg-gradient-to-r from-purple-500 to-indigo-400 h-3 rounded-full shadow-lg shadow-purple-500/20" 
+                 style="width: {{ result.benchmark.market_width }}%; transition: width 0.8s ease-in-out 100ms;">
+            </div>
         </div>
     </div>
 </div>
 
 {% if result.benchmark.is_above %}
-    <div class="mt-4 text-center p-3 rounded-md text-sm bg-green-500/20 text-green-300">
-        Seu salário está <strong class="font-bold">{{ result.benchmark.percentageDiff }}% acima</strong> da média de mercado.
+    <div class="mt-6 flex items-center justify-center gap-2 text-center p-3 rounded-lg text-sm bg-green-900/40 border border-green-500/30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        <span class="text-gray-200">
+            Você está <strong class="font-bold text-green-300">{{ result.benchmark.percentageDiff }}% acima</strong> da média de mercado.
+        </span>
     </div>
 {% else %}
-    <div class="mt-4 text-center p-3 rounded-md text-sm bg-red-500/20 text-red-300">
-        Seu salário está <strong class="font-bold">{{ result.benchmark.percentageDiff|cut:"-" }}% abaixo</strong> da média de mercado.
+    <div class="mt-6 flex items-center justify-center gap-2 text-center p-3 rounded-lg text-sm bg-red-900/40 border border-red-500/30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" />
+        </svg>
+        <span class="text-gray-200">
+            Você está <strong class="font-bold text-red-300">{{ result.benchmark.percentageDiff|cut:"-" }}% abaixo</strong> da média.
+        </span>
     </div>
 {% endif %}
