@@ -24,7 +24,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; } /* Corrigido */
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
         input[type=number] { appearance: textfield; -moz-appearance: textfield; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
@@ -110,7 +110,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         
-                        <div id="card-clt" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col justify-between">
+                        <div id="card-clt" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md flex flex-col">
                             <div>
                                 <label for="clt-salary" class="block mb-2">
                                     <h2 class="text-2xl font-semibold text-white">
@@ -136,11 +136,24 @@
                                 </label>
                                 <div class="relative mt-4"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="pj-revenue" name="pj_bruto" type="number" step="0.01" value="{{ pj_bruto|default_if_none:'' }}" placeholder="Ex: 8000" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Proposta PJ"></div>
                             </div>
+                            <div id="simples-banner" style="display: none;" class="mt-4 p-3 bg-blue-900/50 border border-blue-700 rounded-lg text-center text-sm text-blue-200">
+                                Ótimo faturamento! Para este valor, o cálculo será feito pelo <strong>Simples Nacional</strong>.
+                            </div>
                             <div class="mt-4 pt-4 border-t border-gray-700/50">
                                 <label for="pj-costs" class="block mb-2 text-sm text-gray-400">Custos Fixos Mensais (Contador, Saúde, etc.)<span class="text-gray-500 ml-1">(Opcional)</span></label>
                                 <div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 text-lg">R$</span><input id="pj-costs" name="pj_costs" type="number" step="0.01" value="{{ pj_costs|default_if_none:'' }}" placeholder="Ex: 500" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-12 pr-4 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Custos Fixos Mensais"></div>
                             </div>
-                        </div>
+
+                            <div id="simples-tax-rate-field" style="display: none;" class="mt-4">
+                                <label for="pj-tax-rate-override" class="block mb-2 text-sm text-gray-400">Alíquota Simples Nacional (%) <span class="text-gray-500 ml-1">(Opcional)</span></label>
+                                <div class="relative">
+                                    <input id="pj-tax-rate-override" name="pj_tax_rate_override" type="number" step="0.01" value="{{ pj_tax_rate_override|default_if_none:'' }}" placeholder="Ex: 6" class="w-full bg-gray-900 border border-gray-600 rounded-lg py-3 pl-4 pr-12 text-white text-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500" aria-label="Alíquota Simples Nacional">
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 text-lg">%</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Deixe em branco para usar o cálculo automático (Anexo III ou V).</p>
+                            </div>
+                            
+                            </div>
                     </div>
                 </div>
 
@@ -218,87 +231,140 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             
-                            <div class="bg-gray-900/70 p-5 rounded-lg border border-gray-700/50">
-                                <h4 class="text-xl font-bold text-teal-400 mb-4">
-                                    {% if work_mode == 'clt' %}CLT Atual{% else %}Proposta CLT{% endif %}
-                                </h4>
-                                <ul class="space-y-3 text-sm">
+                            <div class="bg-gray-900/70 rounded-lg border border-gray-700/50 flex flex-col">
+                                <div class="p-5 flex-grow">
+                                    <h4 class="text-xl font-bold text-teal-400 mb-4">
+                                        {% if work_mode == 'clt' %}CLT Atual{% else %}Proposta CLT{% endif %}
+                                    </h4>
                                     
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400">Salário Bruto</span>
-                                        <span class="font-medium text-gray-200">{{ result.clt_gross_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400">Benefícios Extras (VA, VT, etc)</span>
-                                        <span class="font-medium text-gray-200">+ {{ result.clt_benefits_f }}</span>
-                                    </li>
-                                    
-                                    <li class="pt-3 border-t border-gray-700/50">
-                                        <span class="text-xs text-teal-400 uppercase">Benefícios Legais Mensalizados</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400 pl-2">Provisão 13º Salário</span>
-                                        <span class="font-medium text-gray-200">+ {{ result.clt_thirteenth_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400 pl-2">Provisão Férias</span>
-                                        <span class="font-medium text-gray-200">+ {{ result.clt_vacation_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400 pl-2">Provisão Bônus Férias (1/3)</span>
-                                        <span class="font-medium text-gray-200">+ {{ result.clt_vacation_bonus_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400 pl-2">FGTS (8%)</span>
-                                        <span class="font-medium text-gray-200">+ {{ result.clt_fgts_f }}</span>
-                                    </li>
-                                    
-                                    <li class="flex justify-between items-center text-lg pt-3 border-t border-teal-500/50">
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex justify-between items-center">
+                                            <span class="text-gray-400 ">Salário Bruto</span>
+                                            <span class="font-medium text-gray-200">{{ result.clt_gross_f }}</span>
+                                        </li>
+                                        <li class="flex justify-between items-center">
+                                            <span class="text-gray-400 ">Benefícios Extras (VA, VT, etc)</span>
+                                            <span class="font-medium text-gray-200">+ {{ result.clt_benefits_f }}</span>
+                                        </li>
+                                    </ul>
+
+                                    <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                        <p class="text-xs text-teal-400 uppercase font-semibold mb-2">Benefícios Legais Mensalizados</p>
+                                        <ul class="space-y-2 text-sm">
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Provisão 13º Salário</span>
+                                                <span class="font-medium text-gray-200">+ {{ result.clt_thirteenth_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Provisão Férias</span>
+                                                <span class="font-medium text-gray-200">+ {{ result.clt_vacation_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Provisão Bônus Férias (1/3)</span>
+                                                <span class="font-medium text-gray-200">+ {{ result.clt_vacation_bonus_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">FGTS (8%)</span>
+                                                <span class="font-medium text-gray-200">+ {{ result.clt_fgts_f }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-gray-800/50 border-t border-teal-500/50 rounded-b-lg">
+                                    <div class="flex justify-between items-center text-lg">
                                         <span class="font-bold text-white">Valor Total CLT</span>
                                         <span class="font-bold text-teal-400">{{ result.clt_total_f }}</span>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div class="bg-gray-900/70 p-5 rounded-lg border border-gray-700/50">
-                                <h4 class="text-xl font-semibold text-yellow-400 mb-4">
-                                    {% if work_mode == 'clt' %}Proposta PJ{% else %}PJ Atual{% endif %}
-                                </h4>
-                                <ul class="space-y-3 text-sm">
-                                    
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400">Faturamento Bruto</span>
-                                        <span class="font-medium text-gray-200">{{ result.pj_revenue_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400">Custos Fixos (Contador, etc)</span>
-                                        <span class="font-medium text-red-400">- {{ result.pj_costs_f }}</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400">Imposto (Simples - {{ result.pj_tax_rate_f }})</span>
-                                        <span class="font-medium text-red-400">- {{ result.pj_tax_f }}</span>
-                                    </li>
-                                    
-                                    <li class="flex justify-between items-center text-md pt-3 border-t border-gray-700/50">
-                                        <span class="font-semibold text-gray-300">Líquido (Antes das Provisões)</span>
-                                        <span class="font-semibold text-gray-300">{{ result.pj_net_pre_provision_f }}</span>
-                                    </li>
-                                    
-                                    <li class="pt-3 border-t border-gray-700/50">
-                                        <span class="text-xs text-yellow-400 uppercase">Provisões (Recomendado)</span>
-                                    </li>
-                                    <li class="flex justify-between items-center">
-                                        <span class="text-gray-400 pl-2">Reserva p/ 13º e Férias</span>
-                                        <span class="font-medium text-red-400">- {{ result.pj_provisions_f }}</span>
-                                    </li>
-                                    
-                                    <li class="flex justify-between items-center text-lg pt-3 border-t border-yellow-500/50">
-                                        <span class="font-bold text-white">Líquido Real</span>
+                            <div class="bg-gray-900/70 rounded-lg border border-gray-700/50 flex flex-col">
+                                <div class="p-5 flex-grow">
+                                    <h4 class="text-xl font-semibold text-yellow-400 mb-4">
+                                        {% if work_mode == 'clt' %}Proposta PJ{% else %}PJ Atual{% endif %}
+                                        
+                                        {% if result.pj.regime %}
+                                            <span class="text-sm font-normal text-gray-400">({{ result.pj.regime }})</span>
+                                        {% endif %}
+                                    </h4>
+                                
+                                    {% if result.pj.regime == 'Simples Nacional' %}
+                                        <ul class="space-y-2 text-sm">
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Faturamento Bruto</span>
+                                                <span class="font-medium text-gray-200">{{ result.pj_revenue_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Custos Fixos (Contador, etc)</span>
+                                                <span class="font-medium text-red-400">- {{ result.pj_costs_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">INSS Pró-labore (Fixo)</span>
+                                                <span class="font-medium text-red-400">- {{ result.pj_pro_labore_inss_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Imposto ({{ result.pj_tax_rate_f }})</span>
+                                                <span class="font-medium text-red-400">- {{ result.pj_tax_f }}</span>
+                                            </li>
+                                        </ul>
+
+                                        <div class="flex justify-between items-center text-md pt-3 mt-3 border-t border-gray-700/50">
+                                            <span class="font-semibold text-gray-200">Saldo Parcial</span>
+                                            <span class="font-semibold text-gray-300">{{ result.pj_net_pre_provision_f }}</span>
+                                        </div>
+
+                                        <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                            <p class="text-xs text-yellow-400 uppercase font-semibold mb-2">Provisões (Recomendado)</p>
+                                            <ul class="space-y-2 text-sm">
+                                                <li class="flex justify-between items-center">
+                                                    <span class="text-gray-400">Reserva p/ 13º e Férias</span>
+                                                    <span class="font-medium text-red-400">- {{ result.pj_provisions_f }}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    {% elif result.pj.regime == 'MEI' %}
+                                        <ul class="space-y-2 text-sm">
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Faturamento Bruto</span>
+                                                <span class="font-medium text-gray-200">{{ result.pj_revenue_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Custos Fixos (Opcional)</span>
+                                                <span class="font-medium text-red-400">- {{ result.pj_costs_f }}</span>
+                                            </li>
+                                            <li class="flex justify-between items-center">
+                                                <span class="text-gray-400">Imposto Fixo (DAS MEI)</span>
+                                                <span class="font-medium text-red-400">- {{ result.pj_tax_f }}</span>
+                                            </li>
+                                        </ul>
+
+                                        <div class="flex justify-between items-center text-md pt-3 mt-3 border-t border-gray-700/50">
+                                            <span class="font-semibold text-gray-200">Saldo Parcial</span>
+                                            <span class="font-semibold text-gray-300">{{ result.pj_net_pre_provision_f }}</span>
+                                        </div>
+
+                                        <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                            <p class="text-xs text-yellow-400 uppercase font-semibold mb-2">Provisões (Recomendado)</p>
+                                            <ul class="space-y-2 text-sm">
+                                                <li class="flex justify-between items-center">
+                                                    <span class="text-gray-400">Reserva p/ 13º e Férias</span>
+                                                    <span class="font-medium text-red-400">- {{ result.pj_provisions_f }}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="p-4 bg-gray-800/50 border-t border-yellow-500/50 rounded-b-lg">
+                                    <div class="flex justify-between items-center text-lg">
+                                        <span class="font-bold text-white">Valor Total PJ</span>
                                         <span class="font-bold text-yellow-400">{{ result.pj_total_f }}</span>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -383,7 +449,7 @@
     </main>
 
     <footer class="bg-gray-900/50 border-t border-gray-800 py-6 mt-12">
-        <div class="container mx-auto px-4 text-center text-gray-500"><p class="text-sm">Feito com ❤️ para um futuro com trabalho mais justo.</p><div class="mt-2 text-xs"><p>Este projeto apoia os Objetivos de Desenvolvimento Sustentável da ONU:</p><p><span class="font-semibold text-gray-400">ODS 8:</span> Trabalho Decente e Crescimento Econômico<span class="mx-2">|</span><span class="font-semibold text-gray-400">ODS 10:</span> Redução das Desigualdades</p></div></div>
+        <div class="container mx-auto px-4 text-center text-gray-500"><p class="text-sm">FIAP | Global Solution.</p><div class="mt-2 text-xs"><p>Este projeto apoia os Objetivos de Desenvolvimento Sustentável da ONU:</p><p><span class="font-semibold text-gray-400">ODS 8:</span> Trabalho Decente e Crescimento Econômico<span class="mx-2">|</span><span class="font-semibold text-gray-400">ODS 4:</span> Educação de Qualidade</p></div></div>
     </footer>
 
     <script>
@@ -394,11 +460,8 @@
         const cardClt = document.getElementById('card-clt'); 
         const cardPj = document.getElementById('card-pj');
         
-        // *** INÍCIO DA CORREÇÃO ***
-        // 1. Selecionar os elementos <h2> dos títulos
         const headingClt = document.querySelector('#card-clt h2');
         const headingPj = document.querySelector('#card-pj h2');
-        // *** FIM DA CORREÇÃO ***
 
         function setWorkMode(mode) {
             inputMode.value = mode;
@@ -407,24 +470,15 @@
                 btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
                 cardClt.style.order = 1;
                 cardPj.style.order = 2;
-                
-                // *** INÍCIO DA CORREÇÃO ***
-                // 2. Atualizar o texto para o modo CLT
                 headingClt.innerHTML = 'CLT Atual';
                 headingPj.innerHTML = 'Proposta PJ';
-                // *** FIM DA CORREÇÃO ***
-                
             } else {
                 btnPj.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 bg-teal-500 text-gray-900 shadow-md';
                 btnClt.className = 'px-4 sm:px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:bg-gray-700/50';
                 cardPj.style.order = 1;
                 cardClt.style.order = 2;
-                
-                // *** INÍCIO DA CORREÇÃO ***
-                // 3. Atualizar o texto para o modo PJ (o que você pediu)
                 headingClt.innerHTML = 'Proposta CLT';
                 headingPj.innerHTML = 'PJ Atual';
-                // *** FIM DA CORREÇÃO ***
             }
         }
         
@@ -446,12 +500,38 @@
                 analyzeButton.disabled = true;
             }
         }
+        
+        // --- NOVO BLOCO DE LÓGICA PARA O CAMPO PJ ---
+        const pjRevenueInput = document.getElementById('pj-revenue');
+        const simplesBanner = document.getElementById('simples-banner');
+        const simplesTaxField = document.getElementById('simples-tax-rate-field');
+        // Pega o limite MEI que o Django injetou no template
+        const meiLimit = {{ mei_limit|default:6750 }}; 
+
+        function checkPjRevenue() {
+            const revenue = parseFloat(pjRevenueInput.value) || 0;
+            if (revenue > meiLimit) {
+                // Mostra o banner e o campo
+                simplesBanner.style.display = 'block';
+                simplesTaxField.style.display = 'block';
+            } else {
+                // Esconde o banner e o campo
+                simplesBanner.style.display = 'none';
+                simplesTaxField.style.display = 'none';
+            }
+        }
+        // --- FIM DO NOVO BLOCO ---
+
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Garante que o modo correto seja definido no carregamento
             const currentMode = inputMode.value || 'clt';
             setWorkMode(currentMode);
             checkContext();
+            
+            // --- NOVO: Adiciona o listener e checa no carregamento ---
+            pjRevenueInput.addEventListener('input', checkPjRevenue);
+            checkPjRevenue(); // Roda uma vez para o caso da página recarregar com valores
+            // --- FIM DA ATUALIZAÇÃO ---
 
             areaSelect.addEventListener('change', checkContext);
             senioritySelect.addEventListener('change', checkContext);
@@ -474,6 +554,5 @@
             });
         });
     </script>
-    
-</body>
+    </body>
 </html>

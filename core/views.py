@@ -1,4 +1,4 @@
-# core/views.py (VERSÃO CORRIGIDA - LÓGICA DO GRÁFICO MOVIDA PARA A VIEW)
+# core/views.py (VERSÃO COMPLETA E ATUALIZADA)
 
 from django.shortcuts import render
 import math
@@ -22,6 +22,17 @@ except FileNotFoundError:
     LOCATIONS_LIST = ['São Paulo - SP', 'Rio de Janeiro - RJ', 'Santa Catarina - SC']
 
 # ===================================================================
+# CONSTANTES DE CÁLCULO
+# ===================================================================
+# Limite mensal para enquadramento no MEI (R$ 81.000 / 12)
+MEI_MONTHLY_REVENUE_LIMIT = 6750.00
+# Valor fixo aproximado do DAS MEI (varia um pouco por atividade)
+DAS_MEI_FIXED_VALUE = 72.00 
+# Custo fixo do INSS sobre pró-labore (11% do Sal. Mínimo R$ 1412 em 2024)
+# Obrigatório para sócios no Simples Nacional
+PRO_LABORE_INSS_FIXED = 155.32 
+
+# ===================================================================
 # FUNÇÃO DE FORMATAÇÃO
 # ===================================================================
 def format_currency(value):
@@ -32,7 +43,7 @@ def format_currency(value):
         return "R$ 0,00"
 
 # ===================================================================
-# LÓGICA DE CÁLCULO (Sem mudanças)
+# LÓGICA DE CÁLCULO (CLT sem mudanças)
 # ===================================================================
 
 def calculate_clt_equivalent_monthly_value(gross_salary, extra_benefits=0):
@@ -45,6 +56,7 @@ def calculate_clt_equivalent_monthly_value(gross_salary, extra_benefits=0):
     return {'grossSalary': gross_salary, 'extraBenefits': extra_benefits, 'thirteenthMonthly': thirteenth_monthly, 'vacationMonthly': vacation_monthly, 'vacationBonusMonthly': vacation_bonus_monthly, 'fgtsMonthly': fgts_monthly, 'totalBenefitsMonthly': total_benefits_monthly, 'equivalentValue': equivalent_value}
 
 def get_simples_nacional_tax_rate(monthly_revenue):
+    # Função original mantida para o cálculo do Simples
     if monthly_revenue <= 15000: return 0.06
     if monthly_revenue <= 30000: return 0.112
     if monthly_revenue <= 60000: return 0.135
@@ -52,16 +64,58 @@ def get_simples_nacional_tax_rate(monthly_revenue):
     if monthly_revenue <= 300000: return 0.21
     return 0.33
 
-def calculate_pj_net_value(gross_revenue, costs=0):
+# ===================================================================
+# LÓGICA DE CÁLCULO (PJ ATUALIZADA)
+# ===================================================================
+def calculate_pj_net_value(gross_revenue, costs=0, tax_rate_override=None):
+    """
+    Calcula o valor líquido PJ, diferenciando automaticamente
+    entre MEI e Simples Nacional baseado no faturamento.
+    Permite um override da taxa do Simples.
+    """
     taxable_revenue = gross_revenue - costs
-    tax_rate = get_simples_nacional_tax_rate(gross_revenue)
-    tax_amount = gross_revenue * tax_rate
-    net_value = taxable_revenue - tax_amount
     thirteenth_provision = taxable_revenue / 12
     vacation_provision = taxable_revenue / 12
     total_provisions = thirteenth_provision + vacation_provision
+
+    if gross_revenue <= MEI_MONTHLY_REVENUE_LIMIT:
+        # --- Lógica MEI ---
+        regime = 'MEI'
+        tax_rate = 0
+        tax_amount = DAS_MEI_FIXED_VALUE
+        pro_labore_inss = 0
+        net_value = taxable_revenue - tax_amount
+        
+    else:
+        # --- Lógica Simples Nacional (com override) ---
+        regime = 'Simples Nacional'
+        
+        # Se o usuário digitou uma taxa, use-a. Senão, calcule.
+        if tax_rate_override is not None:
+            tax_rate = tax_rate_override
+        else:
+            tax_rate = get_simples_nacional_tax_rate(gross_revenue)
+            
+        tax_amount = gross_revenue * tax_rate
+        pro_labore_inss = PRO_LABORE_INSS_FIXED
+        net_value = taxable_revenue - tax_amount - pro_labore_inss
+
     net_value_with_provisioning = net_value - total_provisions
-    return {'grossRevenue': gross_revenue, 'costs': costs, 'taxableRevenue': taxable_revenue, 'taxRate': tax_rate, 'taxAmount': tax_amount, 'netValue': net_value, 'thirteenthProvision': thirteenth_provision, 'vacationProvision': vacation_provision, 'totalProvisions': total_provisions, 'netValueWithProvisioning': net_value_with_provisioning}
+    
+    return {
+        'regime': regime,
+        'grossRevenue': gross_revenue,
+        'costs': costs,
+        'taxableRevenue': taxable_revenue,
+        'taxRate': tax_rate,
+        'taxAmount': tax_amount,
+        'proLaboreInss': pro_labore_inss,
+        'netValue': net_value,
+        'thirteenthProvision': thirteenth_provision,
+        'vacationProvision': vacation_provision,
+        'totalProvisions': total_provisions,
+        'netValueWithProvisioning': net_value_with_provisioning
+    }
 
 # ===================================================================
 # LÓGICA DE DADOS (Sem mudanças)
@@ -84,23 +138,14 @@ def get_market_rate_from_csv(area, seniority, location):
         return None
 
 # ===================================================================
-# "IA SIMULADA" (VERSÃO V4 - O ESPECIALISTA)
+# "IA SIMULADA" (Sem mudanças)
 # ===================================================================
 
 def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
-    """
-    Simula o prompt do geminiService.ts (v3)
-    mas com o TOM DE VOZ "ESPECIALISTA" que você pediu.
-    """
     def f(val): return format_currency(val)
-
-    # --- 1. Dados para o Veredito da Troca ---
     clt_final = clt['equivalentValue']
     pj_final = pj['netValueWithProvisioning']
-    
-    # --- 2. Dados para a Análise de Mercado ---
     frase_mercado = ""
-    percent_diff_mercado = 0
     is_above_mercado = False
     
     if market_rate and market_rate.get('clt') and clt['grossSalary'] > 0:
@@ -109,8 +154,6 @@ def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
         diferenca_mercado = salary_value - market_value
         percent_diff_mercado = (diferenca_mercado / market_value) * 100
         is_above_mercado = diferenca_mercado >= 0
-        
-        # Constrói a frase de mercado
         pct_abs = f"{abs(percent_diff_mercado):.0f}%"
         posicao = "acima" if is_above_mercado else "abaixo"
         
@@ -118,45 +161,36 @@ def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
              frase_mercado = f"Seu salário CLT atual está alinhado com a média de mercado para sua função e nível."
         elif is_above_mercado:
              frase_mercado = f"Seu salário CLT atual, que já está {pct_abs} {posicao} da média, demonstra que você está em uma posição muito favorável e valorizada."
-        else: # Abaixo da média
+        else:
              frase_mercado = f"No entanto, seu salário CLT atual está {pct_abs} {posicao} da média de mercado, o que indica que você tem uma forte base para negociar."
 
-    # --- 3. Geração do Veredito (Juntando tudo) ---
-    
-    # Cenário: Usuário é CLT e avalia PJ
     if work_mode == 'clt':
         diferenca_troca = pj_final - clt_final
-        
-        if diferenca_troca > 200: # PJ Vantajoso
+        if diferenca_troca > 200:
             frase_troca = (f"A proposta PJ, mesmo provisionando benefícios, representa um ganho mensal de {f(diferenca_troca)}. "
                            f"Financeiramente, a troca é vantajosa.")
-        elif diferenca_troca < -200: # PJ Desvantajoso (Exemplo da sua imagem)
+        elif diferenca_troca < -200:
             frase_troca = (f"A proposta PJ representa uma perda financeira substancial de {f(abs(diferenca_troca))} "
                            f"em comparação ao seu valor CLT atual, tornando a troca financeiramente desvantajosa.")
-            # Ajuste de tom (se o CLT já for bom, a proposta PJ é *ainda pior*)
             if is_above_mercado:
                 frase_mercado = frase_mercado.replace("demonstra que você está", "demonstra que você já está")
                 frase_mercado += " Isso enfraquece a justificativa para aceitar uma proposta PJ tão inferior."
-        else: # Empate
+        else:
             frase_troca = (f"A proposta PJ é financeiramente equivalente ao seu valor CLT atual, com uma diferença de apenas {f(abs(diferenca_troca))}. "
                            f"A decisão deve se basear em outros fatores, como flexibilidade vs. segurança.")
-
-    # Cenário: Usuário é PJ e avalia CLT
     else: 
         diferenca_troca = clt_final - pj_final
-        
-        if diferenca_troca > 200: # Proposta CLT Vantajosa
+        if diferenca_troca > 200:
             frase_troca = (f"A proposta CLT oferece um valor total {f(diferenca_troca)} maior que seu líquido PJ atual (com provisão). "
                            f"Financeiramente, a troca é positiva.")
-        elif diferenca_troca < -200: # Proposta CLT Desvantajosa
+        elif diferenca_troca < -200:
              frase_troca = (f"Alerta: A proposta CLT tem um valor total {f(abs(diferenca_troca))} menor que seu líquido PJ atual (com provisão). "
                             f"Na prática, você estaria aceitando uma redução para ter a segurança da CLT.")
-        else: # Empate
+        else:
              frase_troca = (f"A proposta CLT ({f(clt_final)}) é financeiramente equivalente "
                             f"ao seu líquido real PJ atual ({f(pj_final)}). "
                             f"A decisão de trocar a flexibilidade pela segurança depende de você.")
 
-    # Junta as duas partes em um parágrafo coeso
     return f"{frase_troca} {frase_mercado}"
 
 # ===================================================================
@@ -177,6 +211,8 @@ def home(request):
         'selected_area': '',
         'selected_seniority': '',
         'selected_location': '',
+        'mei_limit': MEI_MONTHLY_REVENUE_LIMIT,       # <-- NOVO: Passa o limite para o JS
+        'pj_tax_rate_override': '',                   # <-- NOVO: Valor default
     }
 
     if request.method == 'POST':
@@ -189,6 +225,11 @@ def home(request):
             beneficios_extras_str = request.POST.get('beneficios_extras', '0')
             pj_costs_str = request.POST.get('pj_costs', '0')
             work_mode = request.POST.get('work_mode', 'clt')
+            
+            # --- NOVO: Recebe a alíquota manual ---
+            pj_tax_rate_override_str = request.POST.get('pj_tax_rate_override', '')
+            pj_tax_rate_override_num = float(pj_tax_rate_override_str) / 100 if pj_tax_rate_override_str else None
+            # --- FIM DA ATUALIZAÇÃO ---
 
             clt_bruto = float(clt_bruto_str) if clt_bruto_str else 0
             pj_bruto = float(pj_bruto_str) if pj_bruto_str else 0
@@ -206,7 +247,10 @@ def home(request):
                 return render(request, 'index.html', context)
 
             clt_result = calculate_clt_equivalent_monthly_value(clt_bruto, beneficios_extras)
-            pj_result = calculate_pj_net_value(pj_bruto, pj_costs)
+            
+            # --- ATUALIZADO: Passa a alíquota manual para o cálculo ---
+            pj_result = calculate_pj_net_value(pj_bruto, pj_costs, pj_tax_rate_override_num)
+            
             market_rate = get_market_rate_from_csv(area, seniority, location)
             analysis_text = get_financial_analysis(clt_result, pj_result, work_mode, area, seniority, market_rate)
             diferenca_final = pj_result['netValueWithProvisioning'] - clt_result['equivalentValue']
@@ -221,12 +265,7 @@ def home(request):
                 'pj_real_formatted': format_currency(pj_result['netValueWithProvisioning']),
                 'fgts_formatted': format_currency(clt_result['fgtsMonthly']),
                 'diferenca_formatted': format_currency(abs(diferenca_final)),
-
-                # ==========================================================
-                # ============= INÍCIO DA ATUALIZAÇÃO ======================
-                # Adicionando os valores formatados para o "Breakdown"
                 
-                # --- Valores CLT Formatados ---
                 'clt_gross_f': format_currency(clt_result['grossSalary']),
                 'clt_benefits_f': format_currency(clt_result['extraBenefits']),
                 'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']),
@@ -236,28 +275,21 @@ def home(request):
                 'clt_total_benefits_f': format_currency(clt_result['totalBenefitsMonthly']),
                 'clt_total_f': format_currency(clt_result['equivalentValue']),
                 
-                # --- Valores PJ Formatados ---
                 'pj_revenue_f': format_currency(pj_result['grossRevenue']),
                 'pj_costs_f': format_currency(pj_result['costs']),
                 'pj_tax_f': format_currency(pj_result['taxAmount']),
                 'pj_tax_rate_f': f"{pj_result['taxRate'] * 100:.1f}%",
+                'pj_pro_labore_inss_f': format_currency(pj_result['proLaboreInss']),
                 'pj_net_pre_provision_f': format_currency(pj_result['netValue']),
                 'pj_provisions_f': format_currency(pj_result['totalProvisions']),
                 'pj_total_f': format_currency(pj_result['netValueWithProvisioning']),
-
-                # ============= FIM DA ATUALIZAÇÃO =========================
-                # ==========================================================
             }
             
-            # --- NOVA LÓGICA DO GRÁFICO ---
             if market_rate:
                 proposal_num = clt_result['grossSalary']
                 market_num = market_rate['clt']
-                
                 percentage_diff = ((proposal_num - market_num) / market_num) * 100
                 is_above = percentage_diff >= 0
-                
-                # Normaliza as barras para 95% do espaço
                 if proposal_num > market_num:
                     proposal_width = 95
                     market_width = (market_num / proposal_num) * 95 if proposal_num > 0 else 0
@@ -273,7 +305,6 @@ def home(request):
                     'proposal_width': f"{proposal_width:.2f}",
                     'market_width': f"{market_width:.2f}",
                 }
-            # --- FIM DA LÓGICA DO GRÁFICO ---
 
             context['result'] = result_data
             context['clt_bruto'] = clt_bruto
@@ -284,6 +315,7 @@ def home(request):
             context['selected_area'] = area
             context['selected_seniority'] = seniority
             context['selected_location'] = location
+            context['pj_tax_rate_override'] = pj_tax_rate_override_str # <-- NOVO: Passa o valor de volta pro form
 
         except (ValueError, TypeError) as e:
             print(e)
