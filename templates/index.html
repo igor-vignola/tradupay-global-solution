@@ -152,7 +152,7 @@
                     </div>
                 </div>
 
-                <div id="values-form" class="transition-all duration-500 ease-in-out">
+                <div id="values-form" class="transition-all duration-300 ease-in-out opacity-40 pointer-events-none">
     
                     <div class="flex flex-col items-center mb-10">
                         <div class="bg-gray-900 p-1.5 rounded-xl flex space-x-1 border border-gray-700 shadow-2xl relative overflow-hidden">
@@ -264,9 +264,26 @@
                     </div>
                 </div>
 
-                <div class="text-center mb-8">
-                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-gray-900 font-bold py-3 px-12 rounded-lg text-lg transition-transform hover:scale-105 shadow-lg shadow-teal-500/20">
-                        Analisar Comparativo Fiscal
+                <div class="text-center mb-8 px-4">
+    
+                    <div class="h-px w-2/3 max-w-sm mx-auto bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 mb-8"></div>
+                    
+                    <button type="submit" id="analyze-button" 
+                        class="
+                            bg-teal-500 hover:bg-teal-400 
+                            text-gray-900 font-bold 
+                            py-3 px-12 rounded-lg 
+                            text-lg 
+                            transition-transform hover:scale-105 
+                            shadow-lg shadow-teal-500/20 
+                            
+                            disabled:bg-gray-700 disabled:text-gray-400 
+                            disabled:shadow-none disabled:hover:scale-100 
+                            disabled:cursor-not-allowed
+                        "
+                        disabled 
+                    > 
+                        <span class="group-disabled:opacity-50">Analisar Comparativo</span>
                     </button>
                 </div>
             </form>
@@ -275,7 +292,7 @@
             <div id="results-section" class="bg-gray-800 rounded-2xl border border-gray-700 shadow-2xl animate-fade-in mt-8 overflow-hidden">
                 
                 <div class="p-8 bg-gradient-to-b from-gray-800 to-gray-900 border-b border-gray-700">
-                    <h2 class="text-2xl font-bold text-center text-teal-400 mb-6 tracking-wide">Veredito da Inteligência Contábil</h2>
+                    <h2 class="text-2xl font-bold text-center text-teal-400 mb-6 tracking-wide">Análise da Proposta</h2>
                     <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700 shadow-inner">
                         <p class="text-center text-gray-200 text-lg leading-relaxed font-light whitespace-pre-line">{{ result.analysis }}</p>
                     </div>
@@ -330,7 +347,7 @@
                 <div class="bg-gray-900/50 border-t border-gray-800 p-8">
                     <h3 class="text-xl font-bold text-center text-white mb-8 flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                        Memória de Cálculo (Líquido vs. Líquido)
+                        Demonstrativo Comparativo
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -543,18 +560,44 @@
     </footer>
 
     <script>
+        // --- Referências de Elementos ---
         const btnClt = document.getElementById('btn-clt');
         const btnPj = document.getElementById('btn-pj');
         const inputMode = document.getElementById('work_mode_input');
         const cardClt = document.getElementById('card-clt'); 
         const cardPj = document.getElementById('card-pj');
 
-        // Elementos para lógica MEI/Simples
         const pjRevenueInput = document.getElementById('pj-revenue');
         const simplesBanner = document.getElementById('simples-banner');
         const simplesTaxField = document.getElementById('simples-tax-rate-field');
         const meiLimit = {{ mei_limit|default:6750 }}; 
 
+        // --- (NOVO) Elementos para "Gating" ---
+        const areaSelect = document.getElementById('area');
+        const senioritySelect = document.getElementById('seniority');
+        const locationSelect = document.getElementById('location');
+        const valuesForm = document.getElementById('values-form');
+        const analyzeButton = document.getElementById('analyze-button');
+
+        // --- (NOVO) Função de Verificação de Contexto ---
+        function checkContextInputs() {
+            // Verifica se todos os 3 selects têm um valor (não são a opção "Selecione...")
+            const isContextFilled = areaSelect.value && senioritySelect.value && locationSelect.value;
+
+            if (isContextFilled) {
+                // Ativa os campos de valor e o botão
+                valuesForm.classList.remove('opacity-40', 'pointer-events-none');
+                valuesForm.classList.add('opacity-100');
+                analyzeButton.disabled = false;
+            } else {
+                // Desativa os campos de valor e o botão
+                valuesForm.classList.add('opacity-40', 'pointer-events-none');
+                valuesForm.classList.remove('opacity-100');
+                analyzeButton.disabled = true;
+            }
+        }
+
+        // --- Função de Modo de Trabalho (Existente) ---
         function setWorkMode(mode) {
             inputMode.value = mode;
             
@@ -588,6 +631,7 @@
             }
         }
 
+        // --- Função de Verificação PJ (Existente) ---
         function checkPjRevenue() {
             const revenue = parseFloat(pjRevenueInput.value) || 0;
             if (revenue > meiLimit) {
@@ -599,10 +643,21 @@
             }
         }
 
+        // --- Listeners de Evento ---
         pjRevenueInput.addEventListener('input', checkPjRevenue);
+        
         document.addEventListener('DOMContentLoaded', () => {
+            // Roda as funções existentes
             setWorkMode(inputMode.value || 'clt');
             checkPjRevenue();
+            
+            // (NOVO) Roda a verificação de contexto na carga
+            checkContextInputs(); 
+            
+            // (NOVO) Adiciona listeners nos dropdowns de contexto
+            areaSelect.addEventListener('change', checkContextInputs);
+            senioritySelect.addEventListener('change', checkContextInputs);
+            locationSelect.addEventListener('change', checkContextInputs);
         });
     </script>
 </body>
