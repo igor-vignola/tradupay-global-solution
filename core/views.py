@@ -3,22 +3,30 @@
 from django.shortcuts import render
 import pandas as pd
 import os
+import json
+import numpy as np 
+import random
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 # ===================================================================
 # CARREGAR A BASE DE DADOS (Sem mudanças)
 # ===================================================================
 try:
     CSV_PATH = os.path.join(os.path.dirname(__file__), 'salarios_mercado.csv')
-    df_market = pd.read_csv(CSV_PATH)
+    # Adicionamos parse_dates para o Pandas ler a coluna de data corretamente
+    df_market = pd.read_csv(CSV_PATH, parse_dates=['data_ref'])
+    
+    # Listas para os dropdowns (mantemos igual)
     AREAS_LIST = sorted(df_market['area'].unique())
     SENIORITIES_LIST = ['Júnior', 'Pleno', 'Sênior']
     LOCATIONS_LIST = sorted(df_market['location'].unique())
 except FileNotFoundError:
-    print("ERRO: 'salarios_mercado.csv' não encontrado na pasta 'core'.")
-    df_market = pd.DataFrame() 
-    AREAS_LIST = ['Desenvolvimento de Software', 'Marketing Digital', 'Design de Produto (UI/UX)']
-    SENIORITIES_LIST = ['Júnior', 'Pleno', 'Sênior']
-    LOCATIONS_LIST = ['São Paulo - SP', 'Rio de Janeiro - RJ', 'Santa Catarina - SC']
+    print("ERRO: 'salarios_mercado.csv' não encontrado.")
+    df_market = pd.DataFrame()
+    AREAS_LIST = []
+    SENIORITIES_LIST = []
+    LOCATIONS_LIST = []
 
 # ===================================================================
 # CONSTANTES E TABELAS FISCAIS (NOVAS)
@@ -253,21 +261,59 @@ def calculate_pj_net_value(gross_revenue, costs=0, tax_rate_override=None):
 # LÓGICA DE DADOS (Sem mudanças)
 # ===================================================================
 def get_market_rate_from_csv(area, seniority, location):
-    if df_market.empty:
-        return None
+    """Busca a taxa mais recente (último mês) para os cálculos principais."""
+    if df_market.empty: return None
     try:
-        rate = df_market[
+        # Filtra pelo cargo
+        df_filtered = df_market[
             (df_market['area'] == area) &
             (df_market['seniority'] == seniority) &
             (df_market['location'] == location)
         ]
-        if not rate.empty:
-            rate_data = rate.iloc[0]
-            return {'clt': rate_data['clt_avg'], 'pj': rate_data['pj_avg']}
-        return None
+        
+        if df_filtered.empty: return None
+        
+        # Ordena por data e pega o último registro (Mês 12/Atual)
+        latest_data = df_filtered.sort_values('data_ref').iloc[-1]
+        
+        return {
+            'clt': float(latest_data['clt_avg']), 
+            'pj': float(latest_data['pj_avg'])
+        }
     except Exception as e:
         print(f"Erro ao consultar DataFrame: {e}")
         return None
+
+def get_historical_data_from_csv(area, seniority, location, work_mode):
+    """Retorna datas, valores e a data do próximo mês para previsão."""
+    if df_market.empty: return None, None, None
+    
+    try:
+        df_filtered = df_market[
+            (df_market['area'] == area) &
+            (df_market['seniority'] == seniority) &
+            (df_market['location'] == location)
+        ].sort_values('data_ref').tail(12)
+        
+        if df_filtered.empty: return None, None, None
+
+        # Formata datas (Eixo X)
+        labels = df_filtered['data_ref'].dt.strftime('%b/%y').tolist()
+        
+        # Pega valores
+        col_name = 'clt_avg' if work_mode == 'clt' else 'pj_avg'
+        values = df_filtered[col_name].tolist()
+        
+        # Calcula o rótulo do próximo mês (para a previsão)
+        last_date = df_filtered['data_ref'].iloc[-1]
+        next_date = last_date + relativedelta(months=1)
+        next_label = next_date.strftime('%b/%y')
+        
+        return labels, values, next_label
+        
+    except Exception as e:
+        print(f"Erro ao buscar histórico: {e}")
+        return None, None, None
 
 # ===================================================================
 # "IA SIMULADA" (Sem mudanças, já compara os valores finais)
@@ -326,6 +372,78 @@ def get_financial_analysis(clt, pj, work_mode, area, seniority, market_rate):
     return f"{frase_troca} {frase_mercado}"
 
 
+
+def calculate_trend_prediction(prices):
+    """Calcula a tendência e previsão usando Regressão Linear (NumPy) com mais granularidade."""
+    if not prices or len(prices) < 2:
+        return None
+
+    x = np.arange(len(prices))
+    y = np.array(prices)
+    
+    slope, intercept = np.polyfit(x, y, 1)
+    
+    forecast_value = (slope * len(prices)) + intercept
+    
+    # NOVAS REGRAS PARA A TENDÊNCIA
+    if slope > 75: # Aumentei o limiar para "Forte"
+        status = "Alta Forte"
+        desc = "Consistente valorização observada. Indicadores apontam para continuidade do crescimento."
+        color = "text-green-400"
+    elif slope > 25: # Novo limiar para "Moderada"
+        status = "Alta Moderada"
+        desc = "Crescimento gradual. O mercado apresenta uma valorização constante."
+        color = "text-teal-400"
+    elif slope > -25: # Faixa de estabilidade mais ampla, com menção à inclinação
+        if slope > 0:
+            status = "Estável com Leve Alta"
+            desc = "Mercado lateralizado, com uma inclinação positiva discreta."
+            color = "text-gray-400" # Ou um tom de teal mais suave se preferir: "text-blue-400"
+        elif slope < 0:
+            status = "Estável com Leve Queda"
+            desc = "Mercado lateralizado, com uma ligeira retração observada."
+            color = "text-gray-400" # Ou um tom de rose mais suave: "text-pink-400"
+        else:
+            status = "Estável"
+            desc = "Mercado lateralizado sem grandes oscilações no período."
+            color = "text-gray-400"
+    elif slope < -75: # Limiar para "Forte Queda"
+        status = "Queda Forte"
+        desc = "Retração acentuada. Fatores indicam uma pressão de baixa no mercado."
+        color = "text-red-400"
+    else: # Entre -25 e -75
+        status = "Queda Moderada"
+        desc = "Declínio gradual, com o mercado em processo de correção ou ajuste."
+        color = "text-pink-400"
+
+    return {
+        'forecast': forecast_value,
+        'slope': slope,
+        'status': status,
+        'description': desc,
+        'color_class': color
+    }
+
+def get_last_12_months_labels():
+    labels = []
+    today = datetime.now()
+    curr = today
+    for _ in range(12):
+        # Formato curto em PT-BR
+        months_pt = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        label = f"{months_pt[curr.month]}/{str(curr.year)[2:]}"
+        labels.append(label)
+        
+        # Subtrair um mês (lógica manual para evitar libs extras)
+        month = curr.month - 1
+        year = curr.year
+        if month == 0:
+            month = 12
+            year -= 1
+        curr = curr.replace(year=year, month=month, day=1)
+        
+    return list(reversed(labels))
+
 # ===================================================================
 # A VIEW PRINCIPAL (ATUALIZADA PARA NOVOS DADOS)
 # ===================================================================
@@ -383,39 +501,74 @@ def home(request):
             pj_result = calculate_pj_net_value(pj_bruto, pj_costs, pj_tax_rate_override_num)
             
             market_rate = get_market_rate_from_csv(area, seniority, location)
+            
+            # 2. Busca histórico REAL para o gráfico (NOVO)
+            trend_data = None
+            # Agora desempacotamos 3 valores: labels, valores e o label futuro
+            hist_labels, hist_values, next_label = get_historical_data_from_csv(area, seniority, location, work_mode)
+            
+            if hist_labels and hist_values:
+                prediction = calculate_trend_prediction(hist_values)
+                
+                if prediction:
+                    # Converter previsão para float nativo do Python (evita erros com NumPy)
+                    forecast_val = float(prediction['forecast'])
+                    
+                    # Série 1: Histórico (12 meses)
+                    # Série 2: Previsão (Conecta o último ponto histórico ao futuro)
+                    # [None, None, ..., Valor_Dez, Valor_Jan_Prev]
+                    pred_series = [None] * (len(hist_values) - 1) + [hist_values[-1], forecast_val]
+                    
+                    trend_data = {
+                        # JSON Dumps garante que [None] vire [null] para o JavaScript
+                        'chart_categories': json.dumps(hist_labels + [next_label]),
+                        'series_historical': json.dumps(hist_values),
+                        'series_prediction': json.dumps(pred_series),
+                        'chart_series_name': json.dumps(f"Histórico {work_mode.upper()} - {area}"),
+                        
+                        # Dados do Card de Insight (Strings normais, não precisa de dumps)
+                        'forecast_value_f': format_currency(forecast_val),
+                        'insight_title': prediction['status'],
+                        'insight_desc': prediction['description'],
+                        'insight_color': prediction['color_class'],
+                        'slope': prediction['slope']
+                    }
+
+            # Gera análise textual
             analysis_text = get_financial_analysis(clt_result, pj_result, work_mode, area, seniority, market_rate)
             diferenca_final = pj_result['netValueWithProvisioning'] - clt_result['equivalentValue']
             
-            # --- NOVO DICIONÁRIO DE RESULTADOS ---
+            # Monta o contexto final
             result_data = {
                 'clt': clt_result,
                 'pj': pj_result,
                 'analysis': analysis_text,
                 'marketRate': market_rate,
+                'trend': trend_data,  # <--- Gráfico com dados reais
                 'diferenca': diferenca_final,
+                
+                # ... (Mantenha os format_currency existentes: clt_equivalent_formatted, etc.)
                 'clt_equivalent_formatted': format_currency(clt_result['equivalentValue']),
                 'pj_real_formatted': format_currency(pj_result['netValueWithProvisioning']),
-                'fgts_formatted': format_currency(clt_result['fgtsMonthly']), # Usado na Dica de Invest.
+                'fgts_formatted': format_currency(clt_result['fgtsMonthly']),
                 'diferenca_formatted': format_currency(abs(diferenca_final)),
                 
-                # Detalhes CLT (Líquido)
                 'clt_gross_f': format_currency(clt_result['grossSalary']),
                 'clt_inss_f': format_currency(clt_result['inssDiscount']),
                 'clt_irrf_f': format_currency(clt_result['irrfDiscount']),
                 'clt_net_f': format_currency(clt_result['netSalary']),
                 'clt_benefits_f': format_currency(clt_result['extraBenefits']),
-                'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']), # Líquido
-                'clt_vacation_f': format_currency(clt_result['vacationMonthly']),     # Líquido
+                'clt_thirteenth_f': format_currency(clt_result['thirteenthMonthly']),
+                'clt_vacation_f': format_currency(clt_result['vacationMonthly']),
                 'clt_fgts_f': format_currency(clt_result['fgtsMonthly']),
                 'clt_total_f': format_currency(clt_result['equivalentValue']),
                 
-                # Detalhes PJ (Otimizado)
                 'pj_revenue_f': format_currency(pj_result['grossRevenue']),
                 'pj_costs_f': format_currency(pj_result['costs']),
-                'pj_tax_f': format_currency(pj_result['taxAmount']), # DAS
+                'pj_tax_f': format_currency(pj_result['taxAmount']),
                 'pj_tax_rate_f': f"{pj_result['taxRate'] * 100:.1f}%",
                 'pj_pro_labore_inss_f': format_currency(pj_result['proLaboreInss']),
-        'pj_pro_labore_irrf_f': format_currency(pj_result['proLaboreIrrf']), # NOVO
+                'pj_pro_labore_irrf_f': format_currency(pj_result['proLaboreIrrf']),
                 'pj_net_pre_provision_f': format_currency(pj_result['netValue']),
                 'pj_provisions_f': format_currency(pj_result['totalProvisions']),
                 'pj_total_f': format_currency(pj_result['netValueWithProvisioning']),

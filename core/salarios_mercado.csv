@@ -1,91 +1,649 @@
-area,seniority,location,clt_avg,pj_avg
-"Desenvolvimento de Software",Júnior,"São Paulo",5500,9000
-"Desenvolvimento de Software",Júnior,"Rio de Janeiro",5000,8500
-"Desenvolvimento de Software",Júnior,"Santa Catarina",4500,8000
-"Desenvolvimento de Software",Pleno,"São Paulo",9500,15000
-"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8500,14000
-"Desenvolvimento de Software",Pleno,"Santa Catarina",8000,13500
-"Desenvolvimento de Software",Sênior,"São Paulo",15000,24000
-"Desenvolvimento de Software",Sênior,"Rio de Janeiro",14000,22000
-"Desenvolvimento de Software",Sênior,"Santa Catarina",13000,21000
-"Infraestrutura & DevOps",Júnior,"São Paulo",5000,8500
-"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4500,7700
-"Infraestrutura & DevOps",Júnior,"Santa Catarina",4200,7200
-"Infraestrutura & DevOps",Pleno,"São Paulo",9000,14500
-"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8100,13000
-"Infraestrutura & DevOps",Pleno,"Santa Catarina",8000,13000
-"Infraestrutura & DevOps",Sênior,"São Paulo",14500,23000
-"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",13000,21000
-"Infraestrutura & DevOps",Sênior,"Santa Catarina",12500,20000
-"Ciência de Dados",Júnior,"São Paulo",6500,10000
-"Ciência de Dados",Júnior,"Rio de Janeiro",6000,9000
-"Ciência de Dados",Júnior,"Santa Catarina",5500,8500
-"Ciência de Dados",Pleno,"São Paulo",11000,17000
-"Ciência de Dados",Pleno,"Rio de Janeiro",10000,16000
-"Ciência de Dados",Pleno,"Santa Catarina",9500,15000
-"Ciência de Dados",Sênior,"São Paulo",17000,26000
-"Ciência de Dados",Sênior,"Rio de Janeiro",15500,24000
-"Ciência de Dados",Sênior,"Santa Catarina",14000,22000
-"Análise de Dados (BI)",Júnior,"São Paulo",4500,7500
-"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4100,6800
-"Análise de Dados (BI)",Júnior,"Santa Catarina",3800,6400
-"Análise de Dados (BI)",Pleno,"São Paulo",7500,12000
-"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6800,11000
-"Análise de Dados (BI)",Pleno,"Santa Catarina",6500,10500
-"Análise de Dados (BI)",Sênior,"São Paulo",11000,17000
-"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10000,15500
-"Análise de Dados (BI)",Sênior,"Santa Catarina",9500,14500
-"Qualidade de Software (QA)",Júnior,"São Paulo",4000,7000
-"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3600,6300
-"Qualidade de Software (QA)",Júnior,"Santa Catarina",3400,6000
-"Qualidade de Software (QA)",Pleno,"São Paulo",7000,11000
-"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6300,10000
-"Qualidade de Software (QA)",Pleno,"Santa Catarina",6000,9500
-"Qualidade de Software (QA)",Sênior,"São Paulo",10000,16000
-"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",9000,14500
-"Qualidade de Software (QA)",Sênior,"Santa Catarina",8500,13500
-"Design de Produto (UI/UX)",Júnior,"São Paulo",5000,8000
-"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4500,7200
-"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4000,7000
-"Design de Produto (UI/UX)",Pleno,"São Paulo",9000,14000
-"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8000,13000
-"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7500,12000
-"Design de Produto (UI/UX)",Sênior,"São Paulo",14000,22000
-"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13000,20000
-"Design de Produto (UI/UX)",Sênior,"Santa Catarina",12000,19000
-"Marketing Digital",Júnior,"São Paulo",3500,6000
-"Marketing Digital",Júnior,"Rio de Janeiro",3200,5400
-"Marketing Digital",Júnior,"Santa Catarina",3000,5000
-"Marketing Digital",Pleno,"São Paulo",6500,10000
-"Marketing Digital",Pleno,"Rio de Janeiro",6000,9500
-"Marketing Digital",Pleno,"Santa Catarina",5500,9000
-"Marketing Digital",Sênior,"São Paulo",10000,16000
-"Marketing Digital",Sênior,"Rio de Janeiro",9000,14500
-"Marketing Digital",Sênior,"Santa Catarina",8500,13500
-"Análise Financeira",Júnior,"São Paulo",4000,7000
-"Análise Financeira",Júnior,"Rio de Janeiro",3600,6300
-"Análise Financeira",Júnior,"Santa Catarina",3400,6000
-"Análise Financeira",Pleno,"São Paulo",7000,11000
-"Análise Financeira",Pleno,"Rio de Janeiro",6500,10500
-"Análise Financeira",Pleno,"Santa Catarina",6000,10000
-"Análise Financeira",Sênior,"São Paulo",11000,17000
-"Análise Financeira",Sênior,"Rio de Janeiro",10000,15500
-"Análise Financeira",Sênior,"Santa Catarina",9500,14500
-"Recursos Humanos (Tech Recruiter)",Júnior,"São Paulo",4500,7000
-"Recursos Humanos (Tech Recruiter)",Júnior,"Rio de Janeiro",4000,6300
-"Recursos Humanos (Tech Recruiter)",Júnior,"Santa Catarina",3800,6000
-"Recursos Humanos (Tech Recruiter)",Pleno,"São Paulo",7500,11500
-"Recursos Humanos (Tech Recruiter)",Pleno,"Rio de Janeiro",6800,10500
-"Recursos Humanos (Tech Recruiter)",Pleno,"Santa Catarina",6500,10000
-"Recursos Humanos (Tech Recruiter)",Sênior,"São Paulo",11000,17000
-"Recursos Humanos (Tech Recruiter)",Sênior,"Rio de Janeiro",10000,15500
-"Recursos Humanos (Tech Recruiter)",Sênior,"Santa Catarina",9500,14500
-"Product Owner (PO)",Júnior,"São Paulo",7000,11000
-"Product Owner (PO)",Júnior,"Rio de Janeiro",6300,10000
-"Product Owner (PO)",Júnior,"Santa Catarina",6000,9500
-"Product Owner (PO)",Pleno,"São Paulo",11000,17000
-"Product Owner (PO)",Pleno,"Rio de Janeiro",10000,15500
-"Product Owner (PO)",Pleno,"Santa Catarina",9500,15000
-"Product Owner (PO)",Sênior,"São Paulo",16000,25000
-"Product Owner (PO)",Sênior,"Rio de Janeiro",14500,23000
-"Product Owner (PO)",Sênior,"Santa Catarina",13500,21000
+data_ref,area,seniority,location,clt_avg,pj_avg
+2024-01-01,"Desenvolvimento de Software",Júnior,"São Paulo",5250,8600
+2024-02-01,"Desenvolvimento de Software",Júnior,"São Paulo",5280,8650
+2024-03-01,"Desenvolvimento de Software",Júnior,"São Paulo",5200,8550
+2024-04-01,"Desenvolvimento de Software",Júnior,"São Paulo",5250,8620
+2024-05-01,"Desenvolvimento de Software",Júnior,"São Paulo",5310,8700
+2024-06-01,"Desenvolvimento de Software",Júnior,"São Paulo",5290,8680
+2024-07-01,"Desenvolvimento de Software",Júnior,"São Paulo",5350,8750
+2024-08-01,"Desenvolvimento de Software",Júnior,"São Paulo",5380,8820
+2024-09-01,"Desenvolvimento de Software",Júnior,"São Paulo",5420,8890
+2024-10-01,"Desenvolvimento de Software",Júnior,"São Paulo",5400,8850
+2024-11-01,"Desenvolvimento de Software",Júnior,"São Paulo",5450,8950
+2024-12-01,"Desenvolvimento de Software",Júnior,"São Paulo",5500,9000
+2024-01-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4780,8100
+2024-02-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4820,8150
+2024-03-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4800,8120
+2024-04-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4850,8200
+2024-05-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4830,8180
+2024-06-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4880,8250
+2024-07-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4920,8320
+2024-08-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4900,8300
+2024-09-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4950,8400
+2024-10-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4980,8450
+2024-11-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",4990,8480
+2024-12-01,"Desenvolvimento de Software",Júnior,"Rio de Janeiro",5000,8500
+2024-01-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4280,7600
+2024-02-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4300,7650
+2024-03-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4320,7700
+2024-04-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4350,7750
+2024-05-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4330,7720
+2024-06-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4380,7800
+2024-07-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4400,7850
+2024-08-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4420,7880
+2024-09-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4450,7920
+2024-10-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4430,7900
+2024-11-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4480,7950
+2024-12-01,"Desenvolvimento de Software",Júnior,"Santa Catarina",4500,8000
+2024-01-01,"Desenvolvimento de Software",Pleno,"São Paulo",9050,14300
+2024-02-01,"Desenvolvimento de Software",Pleno,"São Paulo",9100,14400
+2024-03-01,"Desenvolvimento de Software",Pleno,"São Paulo",9150,14500
+2024-04-01,"Desenvolvimento de Software",Pleno,"São Paulo",9120,14450
+2024-05-01,"Desenvolvimento de Software",Pleno,"São Paulo",9200,14600
+2024-06-01,"Desenvolvimento de Software",Pleno,"São Paulo",9250,14700
+2024-07-01,"Desenvolvimento de Software",Pleno,"São Paulo",9300,14800
+2024-08-01,"Desenvolvimento de Software",Pleno,"São Paulo",9280,14750
+2024-09-01,"Desenvolvimento de Software",Pleno,"São Paulo",9350,14850
+2024-10-01,"Desenvolvimento de Software",Pleno,"São Paulo",9400,14900
+2024-11-01,"Desenvolvimento de Software",Pleno,"São Paulo",9450,14950
+2024-12-01,"Desenvolvimento de Software",Pleno,"São Paulo",9500,15000
+2024-01-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8100,13350
+2024-02-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8150,13400
+2024-03-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8120,13380
+2024-04-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8200,13500
+2024-05-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8250,13600
+2024-06-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8220,13550
+2024-07-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8300,13700
+2024-08-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8350,13800
+2024-09-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8380,13850
+2024-10-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8420,13900
+2024-11-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8450,13950
+2024-12-01,"Desenvolvimento de Software",Pleno,"Rio de Janeiro",8500,14000
+2024-01-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7600,12850
+2024-02-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7650,12900
+2024-03-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7700,13000
+2024-04-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7680,12950
+2024-05-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7750,13100
+2024-06-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7800,13150
+2024-07-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7820,13200
+2024-08-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7850,13250
+2024-09-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7900,13350
+2024-10-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7920,13400
+2024-11-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",7950,13450
+2024-12-01,"Desenvolvimento de Software",Pleno,"Santa Catarina",8000,13500
+2024-01-01,"Desenvolvimento de Software",Sênior,"São Paulo",14250,22800
+2024-02-01,"Desenvolvimento de Software",Sênior,"São Paulo",14300,22900
+2024-03-01,"Desenvolvimento de Software",Sênior,"São Paulo",14350,23000
+2024-04-01,"Desenvolvimento de Software",Sênior,"São Paulo",14400,23100
+2024-05-01,"Desenvolvimento de Software",Sênior,"São Paulo",14500,23200
+2024-06-01,"Desenvolvimento de Software",Sênior,"São Paulo",14550,23300
+2024-07-01,"Desenvolvimento de Software",Sênior,"São Paulo",14600,23400
+2024-08-01,"Desenvolvimento de Software",Sênior,"São Paulo",14700,23500
+2024-09-01,"Desenvolvimento de Software",Sênior,"São Paulo",14750,23600
+2024-10-01,"Desenvolvimento de Software",Sênior,"São Paulo",14850,23750
+2024-11-01,"Desenvolvimento de Software",Sênior,"São Paulo",14900,23850
+2024-12-01,"Desenvolvimento de Software",Sênior,"São Paulo",15000,24000
+2024-01-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13300,20900
+2024-02-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13350,21000
+2024-03-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13400,21100
+2024-04-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13500,21200
+2024-05-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13450,21150
+2024-06-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13550,21300
+2024-07-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13600,21400
+2024-08-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13700,21500
+2024-09-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13800,21700
+2024-10-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13850,21800
+2024-11-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",13950,21900
+2024-12-01,"Desenvolvimento de Software",Sênior,"Rio de Janeiro",14000,22000
+2024-01-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12350,19950
+2024-02-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12400,20000
+2024-03-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12450,20100
+2024-04-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12500,20200
+2024-05-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12550,20300
+2024-06-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12600,20400
+2024-07-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12700,20500
+2024-08-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12750,20600
+2024-09-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12800,20700
+2024-10-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12850,20800
+2024-11-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",12900,20900
+2024-12-01,"Desenvolvimento de Software",Sênior,"Santa Catarina",13000,21000
+2024-01-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4850,8200
+2024-02-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4900,8250
+2024-03-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4880,8220
+2024-04-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4920,8300
+2024-05-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4950,8350
+2024-06-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4900,8300
+2024-07-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4980,8400
+2024-08-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4950,8380
+2024-09-01,"Infraestrutura & DevOps",Júnior,"São Paulo",5020,8450
+2024-10-01,"Infraestrutura & DevOps",Júnior,"São Paulo",4990,8420
+2024-11-01,"Infraestrutura & DevOps",Júnior,"São Paulo",5050,8550
+2024-12-01,"Infraestrutura & DevOps",Júnior,"São Paulo",5000,8500
+2024-01-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4300,7350
+2024-02-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4350,7400
+2024-03-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4320,7380
+2024-04-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4400,7500
+2024-05-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4420,7550
+2024-06-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4380,7500
+2024-07-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4450,7600
+2024-08-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4480,7650
+2024-09-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4520,7720
+2024-10-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4490,7680
+2024-11-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4550,7750
+2024-12-01,"Infraestrutura & DevOps",Júnior,"Rio de Janeiro",4500,7700
+2024-01-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4050,6900
+2024-02-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4080,6950
+2024-03-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4020,6880
+2024-04-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4100,7000
+2024-05-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4150,7100
+2024-06-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4120,7050
+2024-07-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4180,7150
+2024-08-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4150,7120
+2024-09-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4220,7250
+2024-10-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4190,7180
+2024-11-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4250,7280
+2024-12-01,"Infraestrutura & DevOps",Júnior,"Santa Catarina",4200,7200
+2024-01-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8650,13900
+2024-02-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8700,14000
+2024-03-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8680,13950
+2024-04-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8750,14100
+2024-05-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8800,14200
+2024-06-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8850,14300
+2024-07-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8820,14250
+2024-08-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8900,14350
+2024-09-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8950,14450
+2024-10-01,"Infraestrutura & DevOps",Pleno,"São Paulo",8920,14400
+2024-11-01,"Infraestrutura & DevOps",Pleno,"São Paulo",9050,14550
+2024-12-01,"Infraestrutura & DevOps",Pleno,"São Paulo",9000,14500
+2024-01-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7750,12400
+2024-02-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7800,12500
+2024-03-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7780,12450
+2024-04-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7850,12600
+2024-05-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7900,12700
+2024-06-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7950,12800
+2024-07-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",7920,12750
+2024-08-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8000,12850
+2024-09-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8050,12950
+2024-10-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8020,12900
+2024-11-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8150,13100
+2024-12-01,"Infraestrutura & DevOps",Pleno,"Rio de Janeiro",8100,13000
+2024-01-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7650,12400
+2024-02-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7700,12500
+2024-03-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7680,12450
+2024-04-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7750,12600
+2024-05-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7800,12700
+2024-06-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7850,12800
+2024-07-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7820,12750
+2024-08-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7900,12850
+2024-09-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7950,12950
+2024-10-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",7920,12900
+2024-11-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",8050,13100
+2024-12-01,"Infraestrutura & DevOps",Pleno,"Santa Catarina",8000,13000
+2024-01-01,"Infraestrutura & DevOps",Sênior,"São Paulo",13900,22000
+2024-02-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14000,22150
+2024-03-01,"Infraestrutura & DevOps",Sênior,"São Paulo",13950,22050
+2024-04-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14100,22300
+2024-05-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14200,22500
+2024-06-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14300,22700
+2024-07-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14250,22600
+2024-08-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14400,22800
+2024-09-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14550,23100
+2024-10-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14450,22900
+2024-11-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14600,23150
+2024-12-01,"Infraestrutura & DevOps",Sênior,"São Paulo",14500,23000
+2024-01-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12400,20000
+2024-02-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12500,20150
+2024-03-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12450,20050
+2024-04-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12600,20300
+2024-05-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12700,20500
+2024-06-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12800,20700
+2024-07-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12750,20600
+2024-08-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12900,20850
+2024-09-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",13050,21100
+2024-10-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",12950,20950
+2024-11-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",13100,21200
+2024-12-01,"Infraestrutura & DevOps",Sênior,"Rio de Janeiro",13000,21000
+2024-01-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",11900,19000
+2024-02-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12000,19150
+2024-03-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",11950,19050
+2024-04-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12100,19300
+2024-05-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12200,19500
+2024-06-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12300,19700
+2024-07-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12250,19600
+2024-08-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12400,19850
+2024-09-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12550,20100
+2024-10-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12450,19950
+2024-11-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12600,20200
+2024-12-01,"Infraestrutura & DevOps",Sênior,"Santa Catarina",12500,20000
+2024-01-01,"Ciência de Dados",Júnior,"São Paulo",6150,9500
+2024-02-01,"Ciência de Dados",Júnior,"São Paulo",6200,9550
+2024-03-01,"Ciência de Dados",Júnior,"São Paulo",6180,9520
+2024-04-01,"Ciência de Dados",Júnior,"São Paulo",6250,9600
+2024-05-01,"Ciência de Dados",Júnior,"São Paulo",6300,9700
+2024-06-01,"Ciência de Dados",Júnior,"São Paulo",6280,9650
+2024-07-01,"Ciência de Dados",Júnior,"São Paulo",6350,9750
+2024-08-01,"Ciência de Dados",Júnior,"São Paulo",6320,9720
+2024-09-01,"Ciência de Dados",Júnior,"São Paulo",6400,9850
+2024-10-01,"Ciência de Dados",Júnior,"São Paulo",6380,9800
+2024-11-01,"Ciência de Dados",Júnior,"São Paulo",6450,9950
+2024-12-01,"Ciência de Dados",Júnior,"São Paulo",6500,10000
+2024-01-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5650,8500
+2024-02-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5700,8550
+2024-03-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5680,8520
+2024-04-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5750,8650
+2024-05-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5800,8700
+2024-06-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5780,8680
+2024-07-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5850,8750
+2024-08-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5820,8720
+2024-09-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5900,8850
+2024-10-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5880,8800
+2024-11-01,"Ciência de Dados",Júnior,"Rio de Janeiro",5950,8950
+2024-12-01,"Ciência de Dados",Júnior,"Rio de Janeiro",6000,9000
+2024-01-01,"Ciência de Dados",Júnior,"Santa Catarina",5200,8050
+2024-02-01,"Ciência de Dados",Júnior,"Santa Catarina",5250,8100
+2024-03-01,"Ciência de Dados",Júnior,"Santa Catarina",5220,8080
+2024-04-01,"Ciência de Dados",Júnior,"Santa Catarina",5300,8200
+2024-05-01,"Ciência de Dados",Júnior,"Santa Catarina",5350,8250
+2024-06-01,"Ciência de Dados",Júnior,"Santa Catarina",5320,8220
+2024-07-01,"Ciência de Dados",Júnior,"Santa Catarina",5400,8350
+2024-08-01,"Ciência de Dados",Júnior,"Santa Catarina",5380,8300
+2024-09-01,"Ciência de Dados",Júnior,"Santa Catarina",5450,8400
+2024-10-01,"Ciência de Dados",Júnior,"Santa Catarina",5420,8380
+2024-11-01,"Ciência de Dados",Júnior,"Santa Catarina",5480,8450
+2024-12-01,"Ciência de Dados",Júnior,"Santa Catarina",5500,8500
+2024-01-01,"Ciência de Dados",Pleno,"São Paulo",10450,16200
+2024-02-01,"Ciência de Dados",Pleno,"São Paulo",10500,16300
+2024-03-01,"Ciência de Dados",Pleno,"São Paulo",10400,16250
+2024-04-01,"Ciência de Dados",Pleno,"São Paulo",10600,16450
+2024-05-01,"Ciência de Dados",Pleno,"São Paulo",10700,16600
+2024-06-01,"Ciência de Dados",Pleno,"São Paulo",10650,16550
+2024-07-01,"Ciência de Dados",Pleno,"São Paulo",10800,16750
+2024-08-01,"Ciência de Dados",Pleno,"São Paulo",10750,16700
+2024-09-01,"Ciência de Dados",Pleno,"São Paulo",10900,16900
+2024-10-01,"Ciência de Dados",Pleno,"São Paulo",10850,16850
+2024-11-01,"Ciência de Dados",Pleno,"São Paulo",10950,16950
+2024-12-01,"Ciência de Dados",Pleno,"São Paulo",11000,17000
+2024-01-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9500,15200
+2024-02-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9550,15300
+2024-03-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9520,15250
+2024-04-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9600,15400
+2024-05-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9700,15550
+2024-06-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9650,15500
+2024-07-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9800,15700
+2024-08-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9750,15650
+2024-09-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9900,15850
+2024-10-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9850,15800
+2024-11-01,"Ciência de Dados",Pleno,"Rio de Janeiro",9950,15950
+2024-12-01,"Ciência de Dados",Pleno,"Rio de Janeiro",10000,16000
+2024-01-01,"Ciência de Dados",Pleno,"Santa Catarina",9000,14200
+2024-02-01,"Ciência de Dados",Pleno,"Santa Catarina",9050,14300
+2024-03-01,"Ciência de Dados",Pleno,"Santa Catarina",9020,14250
+2024-04-01,"Ciência de Dados",Pleno,"Santa Catarina",9100,14400
+2024-05-01,"Ciência de Dados",Pleno,"Santa Catarina",9200,14550
+2024-06-01,"Ciência de Dados",Pleno,"Santa Catarina",9150,14500
+2024-07-01,"Ciência de Dados",Pleno,"Santa Catarina",9300,14700
+2024-08-01,"Ciência de Dados",Pleno,"Santa Catarina",9250,14650
+2024-09-01,"Ciência de Dados",Pleno,"Santa Catarina",9400,14850
+2024-10-01,"Ciência de Dados",Pleno,"Santa Catarina",9350,14800
+2024-11-01,"Ciência de Dados",Pleno,"Santa Catarina",9450,14950
+2024-12-01,"Ciência de Dados",Pleno,"Santa Catarina",9500,15000
+2024-01-01,"Ciência de Dados",Sênior,"São Paulo",16100,24700
+2024-02-01,"Ciência de Dados",Sênior,"São Paulo",16200,24850
+2024-03-01,"Ciência de Dados",Sênior,"São Paulo",16150,24800
+2024-04-01,"Ciência de Dados",Sênior,"São Paulo",16300,25000
+2024-05-01,"Ciência de Dados",Sênior,"São Paulo",16450,25200
+2024-06-01,"Ciência de Dados",Sênior,"São Paulo",16400,25100
+2024-07-01,"Ciência de Dados",Sênior,"São Paulo",16600,25400
+2024-08-01,"Ciência de Dados",Sênior,"São Paulo",16550,25350
+2024-09-01,"Ciência de Dados",Sênior,"São Paulo",16750,25650
+2024-10-01,"Ciência de Dados",Sênior,"São Paulo",16700,25600
+2024-11-01,"Ciência de Dados",Sênior,"São Paulo",16900,25900
+2024-12-01,"Ciência de Dados",Sênior,"São Paulo",17000,26000
+2024-01-01,"Ciência de Dados",Sênior,"Rio de Janeiro",14700,22800
+2024-02-01,"Ciência de Dados",Sênior,"Rio de Janeiro",14800,22950
+2024-03-01,"Ciência de Dados",Sênior,"Rio de Janeiro",14750,22900
+2024-04-01,"Ciência de Dados",Sênior,"Rio de Janeiro",14900,23100
+2024-05-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15050,23300
+2024-06-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15000,23200
+2024-07-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15200,23500
+2024-08-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15150,23450
+2024-09-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15350,23750
+2024-10-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15300,23700
+2024-11-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15450,23900
+2024-12-01,"Ciência de Dados",Sênior,"Rio de Janeiro",15500,24000
+2024-01-01,"Ciência de Dados",Sênior,"Santa Catarina",13300,20900
+2024-02-01,"Ciência de Dados",Sênior,"Santa Catarina",13400,21050
+2024-03-01,"Ciência de Dados",Sênior,"Santa Catarina",13350,21000
+2024-04-01,"Ciência de Dados",Sênior,"Santa Catarina",13500,21200
+2024-05-01,"Ciência de Dados",Sênior,"Santa Catarina",13650,21400
+2024-06-01,"Ciência de Dados",Sênior,"Santa Catarina",13600,21300
+2024-07-01,"Ciência de Dados",Sênior,"Santa Catarina",13800,21600
+2024-08-01,"Ciência de Dados",Sênior,"Santa Catarina",13750,21550
+2024-09-01,"Ciência de Dados",Sênior,"Santa Catarina",13950,21850
+2024-10-01,"Ciência de Dados",Sênior,"Santa Catarina",13900,21800
+2024-11-01,"Ciência de Dados",Sênior,"Santa Catarina",14000,21950
+2024-12-01,"Ciência de Dados",Sênior,"Santa Catarina",14000,22000
+2024-01-01,"Análise de Dados (BI)",Júnior,"São Paulo",4490,7410
+2024-02-01,"Análise de Dados (BI)",Júnior,"São Paulo",4510,7420
+2024-03-01,"Análise de Dados (BI)",Júnior,"São Paulo",4530,7400
+2024-04-01,"Análise de Dados (BI)",Júnior,"São Paulo",4520,7400
+2024-05-01,"Análise de Dados (BI)",Júnior,"São Paulo",4560,7310
+2024-06-01,"Análise de Dados (BI)",Júnior,"São Paulo",4540,7390
+2024-07-01,"Análise de Dados (BI)",Júnior,"São Paulo",4530,7490
+2024-08-01,"Análise de Dados (BI)",Júnior,"São Paulo",4470,7560
+2024-09-01,"Análise de Dados (BI)",Júnior,"São Paulo",4510,7510
+2024-10-01,"Análise de Dados (BI)",Júnior,"São Paulo",4450,7580
+2024-11-01,"Análise de Dados (BI)",Júnior,"São Paulo",4450,7510
+2024-12-01,"Análise de Dados (BI)",Júnior,"São Paulo",4500,7500
+2024-01-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4060,6690
+2024-02-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4030,6770
+2024-03-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4060,6830
+2024-04-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4060,6730
+2024-05-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4040,6740
+2024-06-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4000,6750
+2024-07-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",3970,6790
+2024-08-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",3970,6830
+2024-09-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4030,6780
+2024-10-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4080,6740
+2024-11-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4110,6780
+2024-12-01,"Análise de Dados (BI)",Júnior,"Rio de Janeiro",4100,6800
+2024-01-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3790,6370
+2024-02-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3800,6370
+2024-03-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3770,6380
+2024-04-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3740,6380
+2024-05-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3700,6340
+2024-06-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3740,6250
+2024-07-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3730,6330
+2024-08-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3770,6370
+2024-09-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3740,6320
+2024-10-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3700,6280
+2024-11-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3740,6370
+2024-12-01,"Análise de Dados (BI)",Júnior,"Santa Catarina",3800,6400
+2024-01-01,"Análise de Dados (BI)",Pleno,"São Paulo",7670,12130
+2024-02-01,"Análise de Dados (BI)",Pleno,"São Paulo",7570,12110
+2024-03-01,"Análise de Dados (BI)",Pleno,"São Paulo",7610,12030
+2024-04-01,"Análise de Dados (BI)",Pleno,"São Paulo",7530,12010
+2024-05-01,"Análise de Dados (BI)",Pleno,"São Paulo",7510,11840
+2024-06-01,"Análise de Dados (BI)",Pleno,"São Paulo",7520,11780
+2024-07-01,"Análise de Dados (BI)",Pleno,"São Paulo",7430,11650
+2024-08-01,"Análise de Dados (BI)",Pleno,"São Paulo",7460,11630
+2024-09-01,"Análise de Dados (BI)",Pleno,"São Paulo",7480,11600
+2024-10-01,"Análise de Dados (BI)",Pleno,"São Paulo",7480,11720
+2024-11-01,"Análise de Dados (BI)",Pleno,"São Paulo",7470,11840
+2024-12-01,"Análise de Dados (BI)",Pleno,"São Paulo",7500,12000
+2024-01-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6910,10750
+2024-02-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6830,10750
+2024-03-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6800,10650
+2024-04-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6900,10620
+2024-05-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6970,10650
+2024-06-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6920,10630
+2024-07-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6920,10790
+2024-08-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6920,10670
+2024-09-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6860,10750
+2024-10-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6820,10840
+2024-11-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6790,10940
+2024-12-01,"Análise de Dados (BI)",Pleno,"Rio de Janeiro",6800,11000
+2024-01-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6590,10070
+2024-02-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6560,10080
+2024-03-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6510,9980
+2024-04-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6500,10050
+2024-05-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6590,9960
+2024-06-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6540,10020
+2024-07-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6530,10100
+2024-08-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6510,10190
+2024-09-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6430,10280
+2024-10-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6450,10380
+2024-11-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6410,10400
+2024-12-01,"Análise de Dados (BI)",Pleno,"Santa Catarina",6500,10500
+2024-01-01,"Análise de Dados (BI)",Sênior,"São Paulo",11460,17650
+2024-02-01,"Análise de Dados (BI)",Sênior,"São Paulo",11370,17520
+2024-03-01,"Análise de Dados (BI)",Sênior,"São Paulo",11370,17500
+2024-04-01,"Análise de Dados (BI)",Sênior,"São Paulo",11500,17450
+2024-05-01,"Análise de Dados (BI)",Sênior,"São Paulo",11400,17310
+2024-06-01,"Análise de Dados (BI)",Sênior,"São Paulo",11300,17220
+2024-07-01,"Análise de Dados (BI)",Sênior,"São Paulo",11300,17140
+2024-08-01,"Análise de Dados (BI)",Sênior,"São Paulo",11140,16980
+2024-09-01,"Análise de Dados (BI)",Sênior,"São Paulo",11080,16990
+2024-10-01,"Análise de Dados (BI)",Sênior,"São Paulo",10940,17130
+2024-11-01,"Análise de Dados (BI)",Sênior,"São Paulo",10840,17260
+2024-12-01,"Análise de Dados (BI)",Sênior,"São Paulo",11000,17000
+2024-01-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10860,15630
+2024-02-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10700,15640
+2024-03-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10790,15760
+2024-04-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10680,15830
+2024-05-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10520,15660
+2024-06-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10460,15800
+2024-07-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10530,15730
+2024-08-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10390,15660
+2024-09-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10270,15710
+2024-10-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10120,15670
+2024-11-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10140,15450
+2024-12-01,"Análise de Dados (BI)",Sênior,"Rio de Janeiro",10000,15500
+2024-01-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9390,14060
+2024-02-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9360,14170
+2024-03-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9420,14300
+2024-04-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9460,14460
+2024-05-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9530,14500
+2024-06-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9400,14610
+2024-07-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9460,14740
+2024-08-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9400,14840
+2024-09-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9420,14680
+2024-10-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9400,14690
+2024-11-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9490,14700
+2024-12-01,"Análise de Dados (BI)",Sênior,"Santa Catarina",9500,14500
+2024-01-01,"Qualidade de Software (QA)",Júnior,"São Paulo",4010,7300
+2024-02-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3980,7230
+2024-03-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3960,7130
+2024-04-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3930,7190
+2024-05-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3930,7180
+2024-06-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3980,7110
+2024-07-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3920,7170
+2024-08-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3930,7160
+2024-09-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3980,7070
+2024-10-01,"Qualidade de Software (QA)",Júnior,"São Paulo",3980,7160
+2024-11-01,"Qualidade de Software (QA)",Júnior,"São Paulo",4010,7080
+2024-12-01,"Qualidade de Software (QA)",Júnior,"São Paulo",4000,7000
+2024-01-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3620,5810
+2024-02-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3670,5900
+2024-03-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3690,5910
+2024-04-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3650,5960
+2024-05-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3590,6040
+2024-06-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3610,6130
+2024-07-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3590,6180
+2024-08-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3580,6250
+2024-09-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3560,6260
+2024-10-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3560,6320
+2024-11-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3610,6270
+2024-12-01,"Qualidade de Software (QA)",Júnior,"Rio de Janeiro",3600,6300
+2024-01-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3400,5750
+2024-02-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3380,5790
+2024-03-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3430,5820
+2024-04-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3480,5880
+2024-05-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3470,5890
+2024-06-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3480,5930
+2024-07-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3530,6020
+2024-08-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3490,5970
+2024-09-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3490,5930
+2024-10-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3450,6000
+2024-11-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3410,5940
+2024-12-01,"Qualidade de Software (QA)",Júnior,"Santa Catarina",3400,6000
+2024-01-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6910,10800
+2024-02-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6840,10830
+2024-03-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6840,10900
+2024-04-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6910,10850
+2024-05-01,"Qualidade de Software (QA)",Pleno,"São Paulo",7000,10730
+2024-06-01,"Qualidade de Software (QA)",Pleno,"São Paulo",7060,10690
+2024-07-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6960,10600
+2024-08-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6970,10710
+2024-09-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6920,10680
+2024-10-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6860,10820
+2024-11-01,"Qualidade de Software (QA)",Pleno,"São Paulo",6960,10870
+2024-12-01,"Qualidade de Software (QA)",Pleno,"São Paulo",7000,11000
+2024-01-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6370,9890
+2024-02-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6450,9990
+2024-03-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6410,10100
+2024-04-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6510,10120
+2024-05-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6510,10130
+2024-06-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6470,10090
+2024-07-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6440,10230
+2024-08-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6400,10110
+2024-09-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6330,10140
+2024-10-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6260,10190
+2024-11-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6280,10060
+2024-12-01,"Qualidade de Software (QA)",Pleno,"Rio de Janeiro",6300,10000
+2024-01-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",5920,9310
+2024-02-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",5960,9320
+2024-03-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",5980,9350
+2024-04-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6070,9300
+2024-05-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6120,9290
+2024-06-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6110,9310
+2024-07-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6070,9400
+2024-08-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6010,9290
+2024-09-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",5940,9320
+2024-10-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",5990,9430
+2024-11-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6050,9410
+2024-12-01,"Qualidade de Software (QA)",Pleno,"Santa Catarina",6000,9500
+2024-01-01,"Qualidade de Software (QA)",Sênior,"São Paulo",9940,16410
+2024-02-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10020,16220
+2024-03-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10100,16070
+2024-04-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10140,16300
+2024-05-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10050,16460
+2024-06-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10020,16410
+2024-07-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10100,16180
+2024-08-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10210,16210
+2024-09-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10080,16030
+2024-10-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10060,15800
+2024-11-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10130,16030
+2024-12-01,"Qualidade de Software (QA)",Sênior,"São Paulo",10000,16000
+2024-01-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8850,14520
+2024-02-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8900,14340
+2024-03-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8870,14360
+2024-04-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8850,14220
+2024-05-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8820,14370
+2024-06-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8770,14320
+2024-07-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8760,14470
+2024-08-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8700,14460
+2024-09-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8820,14290
+2024-10-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",8900,14410
+2024-11-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",9020,14320
+2024-12-01,"Qualidade de Software (QA)",Sênior,"Rio de Janeiro",9000,14500
+2024-01-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8570,13790
+2024-02-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8540,13660
+2024-03-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8470,13690
+2024-04-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8550,13740
+2024-05-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8630,13800
+2024-06-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8600,13630
+2024-07-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8650,13730
+2024-08-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8680,13880
+2024-09-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8690,14020
+2024-10-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8650,13850
+2024-11-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8520,13660
+2024-12-01,"Qualidade de Software (QA)",Sênior,"Santa Catarina",8500,13500
+2024-01-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4890,7850
+2024-02-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4950,7740
+2024-03-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4910,7730
+2024-04-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4910,7670
+2024-05-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4980,7780
+2024-06-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",5020,7700
+2024-07-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4980,7790
+2024-08-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4910,7850
+2024-09-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4920,7910
+2024-10-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4920,8000
+2024-11-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",4930,7940
+2024-12-01,"Design de Produto (UI/UX)",Júnior,"São Paulo",5000,8000
+2024-01-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4420,7510
+2024-02-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4370,7470
+2024-03-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4390,7470
+2024-04-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4440,7440
+2024-05-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4440,7390
+2024-06-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4470,7310
+2024-07-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4510,7290
+2024-08-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4490,7290
+2024-09-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4430,7260
+2024-10-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4490,7260
+2024-11-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4460,7290
+2024-12-01,"Design de Produto (UI/UX)",Júnior,"Rio de Janeiro",4500,7200
+2024-01-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",3950,7080
+2024-02-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",3970,7030
+2024-03-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4020,7030
+2024-04-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4060,6970
+2024-05-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4020,6950
+2024-06-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4060,6970
+2024-07-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4050,6970
+2024-08-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4110,7020
+2024-09-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4050,7070
+2024-10-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4030,7130
+2024-11-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",3990,7060
+2024-12-01,"Design de Produto (UI/UX)",Júnior,"Santa Catarina",4000,7000
+2024-01-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8860,13540
+2024-02-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8980,13450
+2024-03-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",9020,13640
+2024-04-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8900,13500
+2024-05-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8810,13380
+2024-06-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8890,13580
+2024-07-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8990,13710
+2024-08-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8880,13820
+2024-09-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",8920,13750
+2024-10-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",9010,13890
+2024-11-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",9030,13800
+2024-12-01,"Design de Produto (UI/UX)",Pleno,"São Paulo",9000,14000
+2024-01-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8200,13410
+2024-02-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8130,13230
+2024-03-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8040,13270
+2024-04-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7960,13290
+2024-05-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7920,13160
+2024-06-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7820,13320
+2024-07-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7820,13130
+2024-08-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7900,13120
+2024-09-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7860,12930
+2024-10-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",7950,12850
+2024-11-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8060,12870
+2024-12-01,"Design de Produto (UI/UX)",Pleno,"Rio de Janeiro",8000,13000
+2024-01-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7420,12600
+2024-02-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7500,12440
+2024-03-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7600,12530
+2024-04-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7580,12390
+2024-05-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7640,12310
+2024-06-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7540,12280
+2024-07-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7610,12320
+2024-08-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7600,12220
+2024-09-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7490,12050
+2024-10-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7510,11960
+2024-11-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7540,12130
+2024-12-01,"Design de Produto (UI/UX)",Pleno,"Santa Catarina",7500,12000
+2024-01-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13600,22380
+2024-02-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13770,22390
+2024-03-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13950,22180
+2024-04-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13950,22170
+2024-05-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13760,22330
+2024-06-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13670,22590
+2024-07-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13850,22440
+2024-08-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13910,22660
+2024-09-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",14000,22340
+2024-10-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",13950,22450
+2024-11-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",14140,22160
+2024-12-01,"Design de Produto (UI/UX)",Sênior,"São Paulo",14000,22000
+2024-01-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",12820,20160
+2024-02-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13000,19950
+2024-03-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13020,20140
+2024-04-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",12890,20180
+2024-05-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",12810,19880
+2024-06-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13000,20110
+2024-07-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13170,20190
+2024-08-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13170,19930
+2024-09-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13260,19730
+2024-10-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13330,20000
+2024-11-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13170,20050
+2024-12-01,"Design de Produto (UI/UX)",Sênior,"Rio de Janeiro",13000,20000
+2024-01-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11420,19020
+2024-02-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11460,19220
+2024-03-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11620,19080
+2024-04-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11670,19000
+2024-05-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11690,19120
+2024-06-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11790,19000
+2024-07-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11850,18930
+2024-08-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11870,19050
+2024-09-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11880,19210
+2024-10-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11880,19460
+2024-11-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",11890,19210
+2024-12-01,"Design de Produto (UI/UX)",Sênior,"Santa Catarina",12000,19000

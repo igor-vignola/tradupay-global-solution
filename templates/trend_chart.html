@@ -1,0 +1,141 @@
+<div id="trend-chart-wrapper" class="relative w-full h-full min-h-[320px]">
+    <div id="trend-chart-container"></div>
+</div>
+
+<script>
+    (function() {
+        try {
+            // 1. Recupera dados do Python
+            const categories = {{ result.trend.chart_categories|safe }};
+            const historicalData = {{ result.trend.series_historical|safe }};
+            const predictionDataRaw = {{ result.trend.series_prediction|safe }}; 
+            const seriesName = {{ result.trend.chart_series_name|safe }};
+            const slope = {{ result.trend.slope|stringformat:".2f" }};
+
+            // Prepara dados para conexão perfeita da linha
+            let predictionDataForChart = Array(historicalData.length -1).fill(null);
+            predictionDataForChart.push(historicalData[historicalData.length -1]);
+            predictionDataForChart.push(predictionDataRaw[predictionDataRaw.length -1]);
+            
+            // Cores
+            let mainColor = '#2dd4bf'; // Teal
+            if (slope < -10) mainColor = '#f43f5e'; // Rose
+            else if (slope > 10) mainColor = '#2dd4bf'; // Teal
+            else mainColor = '#9ca3af'; // Gray
+
+            const options = {
+                chart: {
+                    type: 'area',
+                    height: 320,
+                    fontFamily: 'inherit',
+                    background: 'transparent',
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    animations: { enabled: true }
+                },
+                series: [
+                    { name: seriesName, data: historicalData },
+                    { name: "Previsão (IA)", data: predictionDataForChart }
+                ],
+                xaxis: {
+                    categories: categories,
+                    labels: { style: { colors: '#9ca3af', fontSize: '11px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    tooltip: { enabled: false },
+                    crosshairs: {
+                        show: true,
+                        stroke: { color: '#374151', width: 1, dashArray: 4 }
+                    }
+                },
+                yaxis: {
+                    min: (min) => min - (min * 0.01), 
+                    max: (max) => max + (max * 0.01),
+                    labels: {
+                        style: { colors: '#9ca3af', fontSize: '10px' },
+                        formatter: (val) => {
+                            if (val == null) return '';
+                            return "R$ " + Math.floor(val); 
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#374151',
+                    strokeDashArray: 4,
+                    padding: { left: 10 }
+                },
+                theme: { mode: 'dark' },
+                colors: [mainColor, '#94a3b8'],
+                stroke: {
+                    curve: 'smooth',
+                    width: [3, 3],
+                    dashArray: [0, 5]
+                },
+                fill: {
+                    type: ['gradient', 'gradient'],
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: [0.4, 0.1],
+                        opacityTo: [0.05, 0.01],
+                        stops: [0, 100]
+                    }
+                },
+                dataLabels: { enabled: false },
+                markers: {
+                    size: [4, 4],
+                    colors: ['#111827', '#111827'],
+                    strokeColors: [mainColor, '#94a3b8'],
+                    strokeWidth: 2,
+                    hover: { size: 6 }
+                },
+                legend: { show: false }, 
+
+                // === NOVO TOOLTIP CUSTOMIZADO ===
+                tooltip: {
+                    shared: false,
+                    intersect: false,
+                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                        const value = series[seriesIndex][dataPointIndex];
+                        if (value === null) return '';
+
+                        const category = w.globals.labels[dataPointIndex];
+                        const seriesName = w.globals.seriesNames[seriesIndex];
+                        const color = w.globals.colors[seriesIndex];
+                        
+                        const formattedVal = value.toLocaleString('pt-BR', { 
+                            style: 'currency', 
+                            currency: 'BRL' 
+                        });
+
+                        return `
+                            <div class="px-4 py-3 bg-gray-900/95 border border-gray-700 rounded-xl shadow-2xl backdrop-blur-md min-w-[140px]">
+                                <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">${category}</div>
+                                
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-2 h-2 rounded-full shadow-[0_0_8px_${color}]" style="background-color: ${color}"></div>
+                                    <span class="text-xs text-gray-300 font-medium">${seriesName}</span>
+                                </div>
+                                
+                                <div class="text-lg font-black text-white tracking-tight ml-3">
+                                    ${formattedVal}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            };
+
+            const chartEl = document.querySelector("#trend-chart-container");
+            if (chartEl) {
+                chartEl.innerHTML = "";
+                const chart = new ApexCharts(chartEl, options);
+                chart.render();
+            }
+
+        } catch (error) {
+            console.error("Erro no gráfico:", error);
+            document.getElementById('trend-chart-container').innerHTML = 
+                '<p class="text-red-400 text-xs">Erro ao exibir gráfico.</p>';
+        }
+    })();
+</script>
