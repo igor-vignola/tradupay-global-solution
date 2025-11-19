@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import json
 import numpy as np 
-import random
+import math
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -444,6 +444,54 @@ def get_last_12_months_labels():
         
     return list(reversed(labels))
 
+def calculate_gaussian_distribution(user_value, market_mean):
+    """
+    Gera uma distribuição normal SIMULADA baseada na média de mercado.
+    Motivo: Nosso CSV tem médias mensais, não dados individuais.
+    Para comparar com a "população", simulamos a dispersão do mercado.
+    """
+    if not market_mean or market_mean <= 0:
+        return None
+
+    # 1. Inferência Estatística
+    # Assumimos que o desvio padrão de salários numa mesma senioridade gira em torno de 18% da média.
+    # (Ex: Junior ganha 5k. Alguns ganham 4k, outros 6k).
+    std_dev = market_mean * 0.18 
+
+    # 2. Cálculo do Z-Score Real
+    z_score = (user_value - market_mean) / std_dev
+
+    # 3. Cálculo do Percentil
+    percentile = 0.5 * (1 + math.erf(z_score / math.sqrt(2))) * 100
+
+    # 4. Gerar dados para o Gráfico (Bell Curve Perfeita)
+    # Criamos uma faixa de -4 a +4 desvios padrão
+    x_min = market_mean - (4 * std_dev)
+    x_max = market_mean + (4 * std_dev)
+    
+    # Gerar 100 pontos para a curva ficar bem lisa
+    x_axis = np.linspace(x_min, x_max, 100)
+    
+    # Função de Densidade de Probabilidade (PDF)
+    y_axis = (1 / (std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_axis - market_mean) / std_dev) ** 2)
+
+    # Normalizar Y (0 a 100) para o gráfico
+    y_axis_norm = (y_axis / np.max(y_axis)) * 100
+
+    # Formatação para o template
+    return {
+        'mean': market_mean,
+        'std_dev': std_dev,
+        'z_score': z_score,
+        'percentile': percentile,
+        'chart_x': json.dumps(x_axis.tolist()),
+        'chart_y': json.dumps(y_axis_norm.tolist()),
+        'user_x': user_value,
+        'is_outlier': abs(z_score) > 1.96, # 95% de confiança
+        'z_score_fmt': f"{z_score:+.2f}σ",
+        'percentile_fmt': f"{percentile:.0f}%"
+    }
+
 # ===================================================================
 # A VIEW PRINCIPAL (ATUALIZADA PARA NOVOS DADOS)
 # ===================================================================
@@ -537,6 +585,27 @@ def home(request):
             # Gera análise textual
             analysis_text = get_financial_analysis(clt_result, pj_result, work_mode, area, seniority, market_rate)
             diferenca_final = pj_result['netValueWithProvisioning'] - clt_result['equivalentValue']
+
+            stats_data = None
+            
+            if market_rate and market_rate.get('clt'):
+                # O usuário pediu para focar apenas na comparação CLT vs Mercado CLT
+                # Pois PJ tem muitas variáveis (impostos, benefícios) que distorcem a curva.
+                
+                market_mean_stats = market_rate['clt'] # Sempre compara com a média CLT
+                user_val_stats = clt_bruto # Sempre usa o valor CLT inputado
+                
+                # Define o rótulo correto baseado no contexto
+                if work_mode == 'clt':
+                    user_label = "CLT Atual"
+                else:
+                    user_label = "Proposta CLT"
+                
+                # Chama a função de cálculo
+                stats_data = calculate_gaussian_distribution(user_val_stats, market_mean_stats)
+                
+                if stats_data:
+                    stats_data['user_label'] = user_label
             
             # Monta o contexto final
             result_data = {
@@ -544,6 +613,7 @@ def home(request):
                 'pj': pj_result,
                 'analysis': analysis_text,
                 'marketRate': market_rate,
+                'statistics': stats_data,
                 'trend': trend_data,  # <--- Gráfico com dados reais
                 'diferenca': diferenca_final,
                 

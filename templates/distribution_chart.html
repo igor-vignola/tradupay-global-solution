@@ -1,0 +1,160 @@
+<div class="relative w-full h-full min-h-[320px]">
+    <div id="gauss-chart"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const xData = {{ result.statistics.chart_x|safe }};
+        const yData = {{ result.statistics.chart_y|safe }};
+        const userValue = {{ result.statistics.user_x|safe }};
+        const meanValue = {{ result.statistics.mean|safe }};
+        const stdDev = {{ result.statistics.std_dev|safe }}; // Necessário para o sombreado
+        const userLabel = "{{ result.statistics.user_label|default:'Sua Posição' }}";
+        
+        // Cores do Tema
+        const colorTeal = '#2dd4bf'; 
+        const colorGray = '#9ca3af'; 
+        const colorPurple = '#a855f7';
+        const colorShade = '#4b5563'; // Cor do sombreado da média
+
+        const options = {
+            series: [{ name: 'Distribuição', data: xData.map((x, i) => [x, yData[i]]) }],
+            chart: {
+                type: 'area',
+                height: 320,
+                fontFamily: 'inherit',
+                background: 'transparent',
+                toolbar: { show: false },
+                zoom: { enabled: false },
+                animations: { enabled: true }
+            },
+            colors: [colorPurple],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.1,
+                    stops: [0, 100]
+                }
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            dataLabels: { enabled: false },
+            
+            xaxis: {
+                type: 'numeric',
+                labels: {
+                    style: { colors: colorGray, fontSize: '11px' },
+                    formatter: (val) => "R$ " + (val/1000).toFixed(1) + "k"
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: false },
+                tooltip: { enabled: false },
+                crosshairs: { show: false } // Remove crosshair padrão para limpar
+            },
+            yaxis: { show: false },
+            
+            grid: {
+                show: true,
+                borderColor: '#374151',
+                strokeDashArray: 4,
+                padding: { left: 10, right: 10, top: 20 } // Mais padding no topo para o label caber
+            },
+            theme: { mode: 'dark' },
+            
+            annotations: {
+                xaxis: [
+                    // 1. FAIXA SOMBREADA (Média ± 1 Sigma) - Restaurada!
+                    {
+                        x: meanValue - stdDev,
+                        x2: meanValue + stdDev,
+                        fillColor: colorShade,
+                        opacity: 0.15, // Sutil
+                        label: {
+                            style: {
+                                color: '#6b7280',
+                                background: 'transparent',
+                                fontSize: '10px',
+                            },
+                            offsetY: 0,
+                            position: 'top',
+                            orientation: 'horizontal'
+                        }
+                    },
+                    
+                    // 2. Linha da Média (Tracejada)
+                    {
+                        x: meanValue,
+                        strokeDashArray: 4,
+                        borderColor: colorGray,
+                        borderWidth: 1,
+                        label: {
+                            text: 'Média',
+                            style: {
+                                color: colorGray,
+                                background: 'transparent',
+                                fontSize: '10px',
+                            },
+                            offsetY: 0, // Fica no rodapé (eixo X)
+                            position: 'bottom',
+                            orientation: 'horizontal'
+                        }
+                    },
+
+                    // 3. MARCADOR DO USUÁRIO (Estilo "Pin" Centralizado)
+                    {
+                        x: userValue,
+                        strokeDashArray: 0,
+                        borderColor: colorTeal,
+                        borderWidth: 2,
+                        // Adiciona um brilho na linha
+                        stroke: {
+                            color: colorTeal,
+                            width: 3,
+                            dashArray: 0
+                        },
+                        label: {
+                            text: userLabel, // "CLT Atual"
+                            style: {
+                                color: '#111827', // Texto escuro
+                                background: colorTeal, // Fundo Teal
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                padding: { left: 8, right: 8, top: 0, bottom: 5},
+                                borderRadius: '4px', // Cantos levemente arredondados
+                            },
+                            position: 'top',
+                            orientation: 'horizontal',
+                            offsetY: -10 // Levemente acima do topo do gráfico
+                        }
+                    }
+                ],
+                // Ponto na base para ancorar visualmente
+                points: [{
+                    x: userValue,
+                    y: 0,
+                    marker: {
+                        size: 6,
+                        fillColor: colorTeal,
+                        strokeColor: '#fff',
+                        strokeWidth: 2
+                    }
+                }]
+            },
+            
+            tooltip: {
+                theme: 'dark',
+                custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    const val = w.globals.initialSeries[seriesIndex].data[dataPointIndex][0];
+                    return `<div class="px-3 py-1.5 bg-gray-800 text-xs text-white border border-gray-700 rounded shadow">R$ ${Math.round(val).toLocaleString('pt-BR')}</div>`;
+                }
+            }
+        };
+
+        const chartEl = document.querySelector("#gauss-chart");
+        if (chartEl) { chartEl.innerHTML = ""; new ApexCharts(chartEl, options).render(); }
+    });
+</script>
